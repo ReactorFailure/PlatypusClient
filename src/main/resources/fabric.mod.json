@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "platypusclient",
+	"version": "${version}",
+	"name": "PlatypusClient",
+	"description": "A terribly made Fabric client mod",
+	"authors": [
+		"ReactorFailure"
+	],
+	"contact": {
+		"homepage": "https://github.com/ReactorFailure/PlatypusClient/wiki",
+		"sources": "https://github.com/ReactorFailure/PlatypusClient"
+	},
+	"license": "LGPL-3.0",
+	"icon": "assets/platypusclient/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.reactorfailure.platypusclient.PlatypusClientMain"
+		],
+		"fabric-datagen": [
+			"net.reactorfailure.platypusclient.PlatypusClientDataGenerator"
+		],
+		"client": [
+			"net.reactorfailure.platypusclient.ClientSide"
+		]
+	},
+	"mixins": [
+		"platypusclient.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.18.3",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
