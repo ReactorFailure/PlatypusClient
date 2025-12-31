@@ -4,41 +4,49 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 
-public class NightVisionModule implements Module {
+public class NightVisionModule extends AbstractModule {
     private static final NightVisionModule INSTANCE = new NightVisionModule();
-    private static boolean enabled;
 
-    private NightVisionModule() {}
+    private NightVisionModule() {
+        super("Night Vision");
+    }
 
     public static NightVisionModule get() {
         return INSTANCE;
     }
 
     @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    @Override
-    public void setEnabled(boolean value) {
-        enabled = value;
-
+    public void onEnable() {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) return;
 
-        if (enabled) {
-            client.player.addStatusEffect(
-                    new StatusEffectInstance(
-                            StatusEffects.NIGHT_VISION,
-                            20 * 60 * 60,
-                            0,
-                            false,
-                            false,
-                            false
-                    )
-            );
-        } else {
-            client.player.removeStatusEffect(StatusEffects.NIGHT_VISION);
+        client.player.addStatusEffect(
+                new StatusEffectInstance(
+                        StatusEffects.NIGHT_VISION,
+                        Integer.MAX_VALUE,
+                        0,
+                        false,
+                        false,
+                        false
+                )
+        );
+    }
+
+    @Override
+    public void onDisable() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null) return;
+
+        client.player.removeStatusEffect(StatusEffects.NIGHT_VISION);
+    }
+
+    @Override
+    public void tick() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (!enabled || client.player == null) return;
+
+        if (!client.player.hasStatusEffect(StatusEffects.NIGHT_VISION)) {
+            onEnable();
         }
     }
 }

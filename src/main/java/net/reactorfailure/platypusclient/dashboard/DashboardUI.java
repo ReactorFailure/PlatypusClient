@@ -6,13 +6,14 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.reactorfailure.platypusclient.modules.NightVisionModule;
-import net.reactorfailure.platypusclient.modules.PersistentSneakModule;
+import net.reactorfailure.platypusclient.modules.ModuleManager;
+import net.reactorfailure.platypusclient.modules.Module;
+
 import org.lwjgl.glfw.GLFW;
 
 public class DashboardUI extends Screen {
     private static final int BOX_WIDTH = 260;
-    private static final int BOX_HEIGHT = 160;
+    private static final int ROW_HEIGHT = 28;
 
     public DashboardUI() {
         super(Text.literal("PlatypusClient Dashboard"));
@@ -25,44 +26,39 @@ public class DashboardUI extends Screen {
 
     @Override
     protected void init() {
+
+        int boxHeight = ModuleManager.all().size() * ROW_HEIGHT + 40;
+
         int x = (this.width - BOX_WIDTH) / 2;
-        int y = (this.height - BOX_HEIGHT) / 2;
+        int y = (this.height - boxHeight) / 2 + 30;
 
-        // Persistent sneak button
-        this.addDrawableChild(
-                ButtonWidget.builder(
-                        persistentSneakText(),
-                        button -> {
-                            var module = PersistentSneakModule.get();
-                            module.setEnabled(!module.isEnabled());
-                            button.setMessage(persistentSneakText());
-                        }
-                ).dimensions(x + 140, y + 45, 90, 20).build()
-        );
-
-        // Night Vision button
-        this.addDrawableChild(
-                ButtonWidget.builder(
-                        nightVisionText(),
-                        button -> {
-                            var module = NightVisionModule.get();
-                            module.setEnabled(!module.isEnabled());
-                            button.setMessage(nightVisionText());
-                        }
-                ).dimensions(x + 140, y + 75, 90, 20).build()
-        );
-
-
+        for (Module module : ModuleManager.all()) {
+            addModuleRow(module, x, y);
+            y += ROW_HEIGHT;
+        }
     }
 
-    private Text persistentSneakText() {
-        return PersistentSneakModule.get().isEnabled()
-                ? Text.literal("Enabled").formatted(Formatting.GREEN)
-                : Text.literal("Disabled").formatted(Formatting.RED);
+
+    private void addModuleRow(Module module, int x, int y) {
+        // Toggle button
+        this.addDrawableChild(
+                ButtonWidget.builder(
+                        getToggleText(module),
+                        button -> {
+                            module.setEnabled(!module.isEnabled());
+                            button.setMessage(getToggleText(module));
+                        }
+                ).dimensions(
+                        x + BOX_WIDTH - 100,
+                        y,
+                        90,
+                        20
+                ).build()
+        );
     }
 
-    private Text nightVisionText() {
-        return NightVisionModule.get().isEnabled()
+    private Text getToggleText(Module module) {
+        return module.isEnabled()
                 ? Text.literal("Enabled").formatted(Formatting.GREEN)
                 : Text.literal("Disabled").formatted(Formatting.RED);
     }
@@ -79,13 +75,16 @@ public class DashboardUI extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        int x = (this.width - BOX_WIDTH) / 2;
-        int y = (this.height - BOX_HEIGHT) / 2;
 
-        // Background box
+        int boxHeight = ModuleManager.all().size() * ROW_HEIGHT + 40;
+
+        int x = (this.width - BOX_WIDTH) / 2;
+        int y = (this.height - boxHeight) / 2;
+
+        // Background
         context.fill(
                 x, y,
-                x + BOX_WIDTH, y + BOX_HEIGHT,
+                x + BOX_WIDTH, y + boxHeight,
                 0xFF1E1E1E
         );
 
@@ -98,31 +97,20 @@ public class DashboardUI extends Screen {
                 0xFF00FFFF
         );
 
-        // Labels
-        context.drawTextWithShadow(
-                this.textRenderer,
-                "Persistent Sneak",
-                x + 12,
-                y + 50,
-                0xFFFFFFFF
-        );
-
-        context.drawTextWithShadow(
-                this.textRenderer,
-                "Night vision",
-                x + 12,
-                y + 80,
-                0xFFFFFFFF
-        );
-
-        context.drawTextWithShadow(
-                this.textRenderer,
-                "Show Hitbox",
-                x + 12,
-                y + 110,
-                0xFFFFFFFF
-        );
+        // Draw module names
+        int textY = y + 30;
+        for (Module module : ModuleManager.all()) {
+            context.drawTextWithShadow(
+                    this.textRenderer,
+                    module.getName(),
+                    x + 12,
+                    textY + 6,
+                    0xFFFFFFFF
+            );
+            textY += ROW_HEIGHT;
+        }
 
         super.render(context, mouseX, mouseY, delta);
+
     }
 }

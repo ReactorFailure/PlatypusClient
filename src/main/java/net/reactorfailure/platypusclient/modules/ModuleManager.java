@@ -28,4 +28,12 @@ public class ModuleManager {
     public static Collection<Module> all() {
         return MODULES.values();
     }
+
+    public static void tickAll() {
+        for (Module module : MODULES.values()) {
+            if (module.isEnabled()) {
+                module.tick();
+            }
+        }
+    }
 }
