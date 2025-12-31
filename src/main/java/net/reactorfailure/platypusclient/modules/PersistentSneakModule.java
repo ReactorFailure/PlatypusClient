@@ -3,57 +3,40 @@ package net.reactorfailure.platypusclient.modules;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 
-public class PersistentSneakModule implements Module {
+public class PersistentSneakModule extends AbstractModule {
 
     private static final PersistentSneakModule INSTANCE = new PersistentSneakModule();
-    private boolean enabled;
 
-    private PersistentSneakModule() {}
+    private PersistentSneakModule() {
+        super("Persistent Sneak");
+    }
 
     public static PersistentSneakModule get() {
         return INSTANCE;
     }
 
     @Override
-    public boolean isEnabled() {
-        return enabled;
+    public void onEnable() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null) return;
+
+        client.options.sneakKey.setPressed(true);
     }
 
     @Override
-    public void setEnabled(boolean value) {
-        enabled = value;
-
+    public void onDisable() {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) return;
 
-        KeyBinding sneak = client.options.sneakKey;
-
-        if (!enabled) {
-            sneak.setPressed(false); // release sneak when disabled
-        }
+        client.options.sneakKey.setPressed(false);
     }
 
-
+    @Override
     public void tick() {
-        if (!enabled) return;
-
         MinecraftClient client = MinecraftClient.getInstance();
-        if (client.player == null) return;
+        if (!enabled || client.player == null) return;
 
-        KeyBinding sneak = client.options.sneakKey;
-        KeyBinding jump = client.options.jumpKey;
-
-
-        sneak.setPressed(!jump.isPressed());
-    }
-
-
-    public void disable() {
-        enabled = false;
-
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client.player != null) {
-            client.options.sneakKey.setPressed(false);
-        }
+        // Force sneak every tick (prevents unsneak)
+        client.options.sneakKey.setPressed(true);
     }
 }

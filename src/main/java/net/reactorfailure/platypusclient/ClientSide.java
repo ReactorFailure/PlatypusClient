@@ -8,6 +8,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.reactorfailure.platypusclient.dashboard.DashboardAlertHUD;
 import net.reactorfailure.platypusclient.dashboard.DashboardUI;
+import net.reactorfailure.platypusclient.modules.ModuleBootstrap;
 import net.reactorfailure.platypusclient.modules.ModuleManager;
 import net.reactorfailure.platypusclient.modules.NightVisionModule;
 import net.reactorfailure.platypusclient.modules.PersistentSneakModule;
@@ -22,8 +23,11 @@ public class ClientSide implements ClientModInitializer {
     public void onInitializeClient() {
 
         DashboardAlertHUD.register();
-        ModuleManager.register(PersistentSneakModule.get());
-        ModuleManager.register(NightVisionModule.get());
+        ModuleBootstrap.init();
+
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            ModuleManager.tickAll();
+        });
 
 
         // Pressing G will open up the mod ui
@@ -51,8 +55,11 @@ public class ClientSide implements ClientModInitializer {
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            PersistentSneakModule.get().disable();
+            PersistentSneakModule.get().onDisable();
         });
 
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            NightVisionModule.get().tick();
+        });
     }
 }
