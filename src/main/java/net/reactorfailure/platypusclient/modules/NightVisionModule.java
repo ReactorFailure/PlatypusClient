@@ -5,10 +5,11 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 
 public class NightVisionModule extends AbstractModule {
-    private static final NightVisionModule INSTANCE = new NightVisionModule();
+    private static NightVisionModule INSTANCE;
 
-    private NightVisionModule() {
-        super("Night Vision");
+    NightVisionModule() {
+        super("mod_nv", "Night Vision");
+        INSTANCE = this;
     }
 
     public static NightVisionModule get() {
@@ -43,7 +44,7 @@ public class NightVisionModule extends AbstractModule {
     @Override
     public void tick() {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (!enabled || client.player == null) return;
+        if (!isEnabled() || client.player == null) return;
 
         if (!client.player.hasStatusEffect(StatusEffects.NIGHT_VISION)) {
             onEnable();

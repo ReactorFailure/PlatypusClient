@@ -36,4 +36,13 @@ public class ModuleManager {
             }
         }
     }
+
+    public static void disableAll() {
+        for (Module module : MODULES.values()) {
+            if (module.isEnabled()) {
+                module.setEnabled(false);
+                module.onDisable();
+            }
+        }
+    }
 }

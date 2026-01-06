@@ -1,43 +1,52 @@
 package net.reactorfailure.platypusclient.modules;
 
-public abstract class AbstractModule implements Module{
-    protected final String name;
-    protected boolean enabled;
+import net.reactorfailure.platypusclient.config.ConfigManager;
 
-    protected AbstractModule(String name) {
+public abstract class AbstractModule implements Module{
+    private final String name;
+    private final String id;
+    private boolean enabled;
+
+    protected AbstractModule(String id, String name) {
+        this.id = id;
         this.name = name;
-        ModuleManager.register(this); // auto-register
     }
 
     @Override
-    public String getName() {
+    public final String getId() {
+        return id;
+    }
+
+    @Override
+    public final String getName() {
         return name;
     }
 
+
     @Override
-    public boolean isEnabled() {
+    public final boolean isEnabled() {
         return enabled;
     }
 
     @Override
-    public void setEnabled(boolean value) {
-        if (this.enabled == value) return;
+    public final void setEnabled(boolean enabled) {
+        if (this.enabled == enabled) return;
 
-        this.enabled = value;
+        this.enabled = enabled;
 
-        if (value) {
-            onEnable();
-        } else {
-            onDisable();
-        }
+        if (enabled) onEnable();
+        else onDisable();
     }
 
     @Override
-    public void onEnable() {}
+    public void tick() {}
 
-    @Override
+    public void onEnable() {}
     public void onDisable() {}
 
-    @Override
-    public void tick() {}
+    public Object saveToConfig() {
+        return null;
+    }
+
+    public void loadFromConfig(Object data) {}
 }

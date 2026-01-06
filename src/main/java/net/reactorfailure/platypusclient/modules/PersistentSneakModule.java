@@ -4,11 +4,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 
 public class PersistentSneakModule extends AbstractModule {
+    private static PersistentSneakModule INSTANCE;
 
-    private static final PersistentSneakModule INSTANCE = new PersistentSneakModule();
-
-    private PersistentSneakModule() {
-        super("Persistent Sneak");
+    PersistentSneakModule() {
+        super("mod_ps", "Persistent Sneak");
+        INSTANCE = this;
     }
 
     public static PersistentSneakModule get() {
@@ -34,7 +34,7 @@ public class PersistentSneakModule extends AbstractModule {
     @Override
     public void tick() {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (!enabled || client.player == null) return;
+        if (!isEnabled() || client.player == null) return;
 
         // Force sneak every tick (prevents unsneak)
         client.options.sneakKey.setPressed(true);
