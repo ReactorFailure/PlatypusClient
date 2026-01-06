@@ -9,14 +9,32 @@ import net.minecraft.util.Formatting;
 import net.reactorfailure.platypusclient.modules.ModuleManager;
 import net.reactorfailure.platypusclient.modules.Module;
 
+import net.reactorfailure.platypusclient.settings.Settings;
+import net.reactorfailure.platypusclient.settings.SettingsManager;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DashboardUI extends Screen {
-    private static final int BOX_WIDTH = 260;
+
+    private static DashboardUI INSTANCE;
+
+    private final Map<Module, ButtonWidget> moduleButtons = new HashMap<>();
+
+    // Panel sizes
+    private static final int DASHBOARD_WIDTH = 220;
+    private static final int SETTINGS_WIDTH = 122;
     private static final int ROW_HEIGHT = 28;
+    private static final int PANEL_GAP = 6;
 
     public DashboardUI() {
         super(Text.literal("PlatypusClient Dashboard"));
+        INSTANCE = this;
+    }
+
+    public static DashboardUI getInstance() {
+        return INSTANCE;
     }
 
     @Override
@@ -26,35 +44,75 @@ public class DashboardUI extends Screen {
 
     @Override
     protected void init() {
+        this.clearChildren();
+        this.moduleButtons.clear();
 
-        int boxHeight = ModuleManager.all().size() * ROW_HEIGHT + 40;
+        int moduleCount = ModuleManager.all().size();
+        int settingsCount = SettingsManager.all().size();
 
-        int x = (this.width - BOX_WIDTH) / 2;
-        int y = (this.height - boxHeight) / 2 + 30;
+        int dashboardHeight = moduleCount * ROW_HEIGHT + 40;
+        int settingsHeight = settingsCount * ROW_HEIGHT + 40;
 
+
+        int dashboardX = (this.width - DASHBOARD_WIDTH) / 2;
+        int settingsX = dashboardX + DASHBOARD_WIDTH + PANEL_GAP;
+
+        int dashboardY = (this.height - dashboardHeight) / 2;
+        int settingsY = (this.height - settingsHeight) / 2;
+
+        // module buttons
+        int y = dashboardY + 30;
         for (Module module : ModuleManager.all()) {
-            addModuleRow(module, x, y);
+            addModuleRow(module, dashboardX, y);
+            y += ROW_HEIGHT;
+        }
+
+        // settings buttons
+        y = settingsY + 30;
+        for (Settings setting : SettingsManager.all()) {
+            this.addDrawableChild(
+                    ButtonWidget.builder(
+                            Text.literal(setting.getName()),
+                            btn -> setting.onClick()
+                    ).dimensions(
+                            settingsX + 12,
+                            y,
+                            SETTINGS_WIDTH - 24,
+                            20
+                    ).build()
+            );
             y += ROW_HEIGHT;
         }
     }
 
-
     private void addModuleRow(Module module, int x, int y) {
-        // Toggle button
-        this.addDrawableChild(
-                ButtonWidget.builder(
-                        getToggleText(module),
-                        button -> {
-                            module.setEnabled(!module.isEnabled());
-                            button.setMessage(getToggleText(module));
-                        }
-                ).dimensions(
-                        x + BOX_WIDTH - 100,
-                        y,
-                        90,
-                        20
-                ).build()
-        );
+        ButtonWidget button = ButtonWidget.builder(
+                getToggleText(module),
+                btn -> {
+                    module.setEnabled(!module.isEnabled());
+                    btn.setMessage(getToggleText(module));
+                }
+        ).dimensions(
+                x + DASHBOARD_WIDTH - 100,
+                y,
+                90,
+                20
+        ).build();
+
+        this.addDrawableChild(button);
+        moduleButtons.put(module, button);
+    }
+
+    public void refreshModuleButtons() {
+        for (Map.Entry<Module, ButtonWidget> entry : moduleButtons.entrySet()) {
+            entry.getValue().setMessage(getToggleText(entry.getKey()));
+        }
+    }
+
+    @Override
+    public void close() {
+        super.close();
+        INSTANCE = null;
     }
 
     private Text getToggleText(Module module) {
@@ -63,11 +121,10 @@ public class DashboardUI extends Screen {
                 : Text.literal("Disabled").formatted(Formatting.RED);
     }
 
-
     @Override
     public boolean keyPressed(KeyInput keyInput) {
         if (keyInput.key() == GLFW.GLFW_KEY_G) {
-            this.close(); // toggle close
+            this.close();
             return true;
         }
         return super.keyPressed(keyInput);
@@ -76,41 +133,64 @@ public class DashboardUI extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
 
-        int boxHeight = ModuleManager.all().size() * ROW_HEIGHT + 40;
+        int moduleCount = ModuleManager.all().size();
+        int settingsCount = SettingsManager.all().size();
 
-        int x = (this.width - BOX_WIDTH) / 2;
-        int y = (this.height - boxHeight) / 2;
+        int dashboardHeight = moduleCount * ROW_HEIGHT + 40;
+        int settingsHeight = settingsCount * ROW_HEIGHT + 40;
 
-        // Background
+        int dashboardX = (this.width - DASHBOARD_WIDTH) / 2;
+        int settingsX = dashboardX + DASHBOARD_WIDTH + PANEL_GAP;
+
+        int dashboardY = (this.height - dashboardHeight) / 2;
+        int settingsY = (this.height - settingsHeight) / 2;
+
+        // dashboard background
         context.fill(
-                x, y,
-                x + BOX_WIDTH, y + boxHeight,
+                dashboardX,
+                dashboardY,
+                dashboardX + DASHBOARD_WIDTH,
+                dashboardY + dashboardHeight,
                 0xFF1E1E1E
         );
 
-        // Title
         context.drawTextWithShadow(
                 this.textRenderer,
                 "PlatypusClient Dashboard",
-                x + 12,
-                y + 10,
+                dashboardX + 12,
+                dashboardY + 10,
                 0xFF00FFFF
         );
 
-        // Draw module names
-        int textY = y + 30;
+        int textY = dashboardY + 30;
         for (Module module : ModuleManager.all()) {
             context.drawTextWithShadow(
                     this.textRenderer,
                     module.getName(),
-                    x + 12,
+                    dashboardX + 12,
                     textY + 6,
                     0xFFFFFFFF
             );
             textY += ROW_HEIGHT;
         }
 
-        super.render(context, mouseX, mouseY, delta);
+        // settings background
+        context.fill(
+                settingsX,
+                settingsY,
+                settingsX + SETTINGS_WIDTH,
+                settingsY + settingsHeight,
+                0xFF141414
+        );
 
+        context.drawTextWithShadow(
+                this.textRenderer,
+                "Settings",
+                settingsX + 12,
+                settingsY + 10,
+                0xFFAAAAAA
+        );
+
+        super.render(context, mouseX, mouseY, delta);
     }
 }
