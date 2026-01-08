@@ -1,4 +1,4 @@
-package net.reactorfailure.platypusclient.settings;
+package net.reactorfailure.platypusclient.settings.core;
 
 public interface Settings {
     String getId();

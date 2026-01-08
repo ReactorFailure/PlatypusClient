@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
-import net.reactorfailure.platypusclient.modules.ModuleManager;
+import net.reactorfailure.platypusclient.modules.core.ModuleManager;
 
 public class DashboardAlertHUD {
     public static void register() {
@@ -35,7 +35,4 @@ public class DashboardAlertHUD {
                 0x91a8a8a8
         );
     }
-
 }
-
-

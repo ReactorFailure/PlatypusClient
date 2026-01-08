@@ -1,12 +1,12 @@
 package net.reactorfailure.platypusclient.modules;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
+import net.reactorfailure.platypusclient.modules.core.AbstractModule;
 
 public class PersistentSneakModule extends AbstractModule {
     private static PersistentSneakModule INSTANCE;
 
-    PersistentSneakModule() {
+    public PersistentSneakModule() {
         super("mod_ps", "Persistent Sneak");
         INSTANCE = this;
     }

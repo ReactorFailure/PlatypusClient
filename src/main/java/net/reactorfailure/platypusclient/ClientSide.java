@@ -9,10 +9,9 @@ import net.minecraft.client.util.InputUtil;
 import net.reactorfailure.platypusclient.config.ConfigManager;
 import net.reactorfailure.platypusclient.dashboard.DashboardAlertHUD;
 import net.reactorfailure.platypusclient.dashboard.DashboardUI;
-import net.reactorfailure.platypusclient.modules.ModuleBootstrap;
-import net.reactorfailure.platypusclient.modules.ModuleManager;
-
-import net.reactorfailure.platypusclient.settings.SettingsBootstrap;
+import net.reactorfailure.platypusclient.modules.core.ModuleBootstrap;
+import net.reactorfailure.platypusclient.modules.core.ModuleManager;
+import net.reactorfailure.platypusclient.settings.core.SettingsBootstrap;
 import org.lwjgl.glfw.GLFW;
 
 public class ClientSide implements ClientModInitializer {

@@ -6,11 +6,10 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.reactorfailure.platypusclient.modules.ModuleManager;
-import net.reactorfailure.platypusclient.modules.Module;
-
-import net.reactorfailure.platypusclient.settings.Settings;
-import net.reactorfailure.platypusclient.settings.SettingsManager;
+import net.reactorfailure.platypusclient.modules.core.Module;
+import net.reactorfailure.platypusclient.modules.core.ModuleManager;
+import net.reactorfailure.platypusclient.settings.core.Settings;
+import net.reactorfailure.platypusclient.settings.core.SettingsManager;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
@@ -52,7 +51,6 @@ public class DashboardUI extends Screen {
 
         int dashboardHeight = moduleCount * ROW_HEIGHT + 40;
         int settingsHeight = settingsCount * ROW_HEIGHT + 40;
-
 
         int dashboardX = (this.width - DASHBOARD_WIDTH) / 2;
         int settingsX = dashboardX + DASHBOARD_WIDTH + PANEL_GAP;
