@@ -1,6 +1,4 @@
-package net.reactorfailure.platypusclient.settings;
-
-import net.minecraft.text.Text;
+package net.reactorfailure.platypusclient.settings.core;
 
 public class AbstractSettings implements Settings {
     protected final String id;

@@ -1,8 +1,6 @@
-package net.reactorfailure.platypusclient.modules;
+package net.reactorfailure.platypusclient.modules.core;
 
-import net.reactorfailure.platypusclient.config.ConfigManager;
-
-public abstract class AbstractModule implements Module{
+public abstract class AbstractModule implements Module {
     private final String name;
     private final String id;
     private boolean enabled;

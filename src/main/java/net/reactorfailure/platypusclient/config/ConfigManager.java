@@ -4,12 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.fabricmc.loader.api.FabricLoader;
-import net.reactorfailure.platypusclient.modules.AbstractModule;
-import net.reactorfailure.platypusclient.modules.Module;
-import net.reactorfailure.platypusclient.modules.ModuleManager;
-import net.reactorfailure.platypusclient.settings.AbstractSettings;
-import net.reactorfailure.platypusclient.settings.Settings;
-import net.reactorfailure.platypusclient.settings.SettingsManager;
+import net.reactorfailure.platypusclient.modules.core.AbstractModule;
+import net.reactorfailure.platypusclient.modules.core.Module;
+import net.reactorfailure.platypusclient.modules.core.ModuleManager;
+import net.reactorfailure.platypusclient.settings.core.AbstractSettings;
+import net.reactorfailure.platypusclient.settings.core.Settings;
+import net.reactorfailure.platypusclient.settings.core.SettingsManager;
 
 import java.io.*;
 
@@ -19,7 +19,6 @@ public class ConfigManager {
             .getConfigDir()
             .resolve("platypusclient/config.json")
             .toFile();
-
 
     public static void saveModules(JsonObject root) {
         JsonObject modules = new JsonObject();
@@ -63,7 +62,6 @@ public class ConfigManager {
         }
     }
 
-
     public static void saveSettings(JsonObject root) {
         JsonObject settings = new JsonObject();
 
@@ -94,7 +92,6 @@ public class ConfigManager {
             }
         }
     }
-
 
     public static void save() {
         try {

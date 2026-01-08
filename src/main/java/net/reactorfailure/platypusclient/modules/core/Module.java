@@ -1,4 +1,4 @@
-package net.reactorfailure.platypusclient.modules;
+package net.reactorfailure.platypusclient.modules.core;
 
 public interface Module {
     String getName();

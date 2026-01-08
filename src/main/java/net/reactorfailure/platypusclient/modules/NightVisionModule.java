@@ -3,11 +3,12 @@ package net.reactorfailure.platypusclient.modules;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.reactorfailure.platypusclient.modules.core.AbstractModule;
 
 public class NightVisionModule extends AbstractModule {
     private static NightVisionModule INSTANCE;
 
-    NightVisionModule() {
+    public NightVisionModule() {
         super("mod_nv", "Night Vision");
         INSTANCE = this;
     }
