@@ -1,5 +1,5 @@
 # Platypus Client
-A terribly made, work in progress, Fabric client mod. 
+A terribly made, work in progress, Fabric client-side mod. 
 
 ## Installation
 1. Clone the project
@@ -10,6 +10,8 @@ git clone https://github.com/ReactorFailure/PlatypusClient.git
 ```
 ./gradlew build
 ```
+## Dependencies
+This mod requires the [Fabric API](https://modrinth.com/mod/fabric-api#download).
 
 ## Usage
 > [!NOTE]
