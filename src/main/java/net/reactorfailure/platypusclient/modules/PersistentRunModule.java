@@ -1,13 +1,14 @@
 package net.reactorfailure.platypusclient.modules;
 
 import net.minecraft.client.MinecraftClient;
+import net.reactorfailure.platypusclient.ClientSide;
 import net.reactorfailure.platypusclient.modules.core.AbstractModule;
 
 public class PersistentRunModule extends AbstractModule {
     private static PersistentRunModule INSTANCE;
 
     public PersistentRunModule() {
-        super("mod_pr", "Persistent run", "Makes you run without pressing the ctrl key");
+        super("mod_pr", "Persistent Run", "Makes you run without pressing the ctrl key");
         INSTANCE = this;
     }
 
@@ -17,6 +18,8 @@ public class PersistentRunModule extends AbstractModule {
 
     @Override
     public void onEnable() {
+        ClientSide.LOGGER.info("PersistentRunModule enabled");
+
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) return;
 
@@ -25,6 +28,8 @@ public class PersistentRunModule extends AbstractModule {
 
     @Override
     public void onDisable() {
+        ClientSide.LOGGER.info("PersistentRunModule disabled");
+
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) return;
 
