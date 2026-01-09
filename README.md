@@ -1,5 +1,5 @@
 # Platypus Client
-A terribly made, work in progress, Fabric client mod. 
+A terribly made, work in progress, Fabric client mod. (Requires Fabric API)
 
 ## Installation
 1. Clone the project
