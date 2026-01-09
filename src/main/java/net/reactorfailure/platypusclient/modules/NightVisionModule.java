@@ -3,12 +3,15 @@ package net.reactorfailure.platypusclient.modules;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.reactorfailure.platypusclient.ClientSide;
+import net.reactorfailure.platypusclient.modules.core.AbstractModule;
 
 public class NightVisionModule extends AbstractModule {
-    private static final NightVisionModule INSTANCE = new NightVisionModule();
+    private static NightVisionModule INSTANCE;
 
-    private NightVisionModule() {
-        super("Night Vision");
+    public NightVisionModule() {
+        super("mod_nv", "Night Vision", "Makes you see in dark places");
+        INSTANCE = this;
     }
 
     public static NightVisionModule get() {
@@ -17,6 +20,8 @@ public class NightVisionModule extends AbstractModule {
 
     @Override
     public void onEnable() {
+        ClientSide.LOGGER.info("Night Vision enabled");
+
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) return;
 
@@ -34,6 +39,8 @@ public class NightVisionModule extends AbstractModule {
 
     @Override
     public void onDisable() {
+        ClientSide.LOGGER.info("Night Vision disabled");
+
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) return;
 
@@ -43,7 +50,7 @@ public class NightVisionModule extends AbstractModule {
     @Override
     public void tick() {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (!enabled || client.player == null) return;
+        if (!isEnabled() || client.player == null) return;
 
         if (!client.player.hasStatusEffect(StatusEffects.NIGHT_VISION)) {
             onEnable();

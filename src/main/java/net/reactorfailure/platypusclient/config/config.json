@@ -1,0 +1,10 @@
+{
+  "modules": {
+    "NightVision": {
+      "enabled": false
+    },
+    "PersistentSneak": {
+      "enabled": false
+    }
+  }
+}

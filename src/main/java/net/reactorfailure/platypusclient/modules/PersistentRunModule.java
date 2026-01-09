@@ -1,40 +1,39 @@
 package net.reactorfailure.platypusclient.modules;
 
-import net.minecraft.block.entity.VaultBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.reactorfailure.platypusclient.ClientSide;
 import net.reactorfailure.platypusclient.modules.core.AbstractModule;
 
-public class PersistentSneakModule extends AbstractModule {
-    private static PersistentSneakModule INSTANCE;
+public class PersistentRunModule extends AbstractModule {
+    private static PersistentRunModule INSTANCE;
 
-    public PersistentSneakModule() {
-        super("mod_ps", "Persistent Sneak", "Makes you sneak without pressing the shift key");
+    public PersistentRunModule() {
+        super("mod_pr", "Persistent Run", "Makes you run without pressing the ctrl key");
         INSTANCE = this;
     }
 
-    public static PersistentSneakModule get() {
+    public static PersistentRunModule get() {
         return INSTANCE;
     }
 
     @Override
     public void onEnable() {
-        ClientSide.LOGGER.info("PersistentSneakModule enabled");
+        ClientSide.LOGGER.info("PersistentRunModule enabled");
 
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) return;
 
-        client.options.sneakKey.setPressed(true);
+        client.options.sprintKey.setPressed(true);
     }
 
     @Override
     public void onDisable() {
-        ClientSide.LOGGER.info("PersistentSneakModule disabled");
+        ClientSide.LOGGER.info("PersistentRunModule disabled");
 
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) return;
 
-        client.options.sneakKey.setPressed(false);
+        client.options.sprintKey.setPressed(false);
     }
 
     @Override
@@ -42,7 +41,7 @@ public class PersistentSneakModule extends AbstractModule {
         MinecraftClient client = MinecraftClient.getInstance();
         if (!isEnabled() || client.player == null) return;
 
-        // Force sneak every tick (prevents unsneak)
-        client.options.sneakKey.setPressed(true);
+        // Force sprint every tick (prevents stopping)
+        client.options.sprintKey.setPressed(true);
     }
 }
