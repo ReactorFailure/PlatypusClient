@@ -20,6 +20,8 @@ git clone https://github.com/ReactorFailure/PlatypusClient.git
 ## Features
 - Night vision
 - Persistent sneaking
+- Persistent run
+- Instant respawn
 
 ## Future plans
 See the repo's issue page [here](https://github.com/ReactorFailure/PlatypusClient/issues).

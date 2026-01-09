@@ -3,11 +3,13 @@ package net.reactorfailure.platypusclient.modules.core;
 public abstract class AbstractModule implements Module {
     private final String name;
     private final String id;
+    private final String description;
     private boolean enabled;
 
-    protected AbstractModule(String id, String name) {
+    protected AbstractModule(String id, String name, String description) {
         this.id = id;
         this.name = name;
+        this.description = description;
     }
 
     @Override
@@ -19,7 +21,8 @@ public abstract class AbstractModule implements Module {
     public final String getName() {
         return name;
     }
-
+    @Override
+    public final String getDescription() {return description;}
 
     @Override
     public final boolean isEnabled() {
