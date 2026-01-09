@@ -128,6 +128,29 @@ public class DashboardUI extends Screen {
         return super.keyPressed(keyInput);
     }
 
+    private void renderTooltips(DrawContext context, int mouseX, int mouseY, int dashboardX, int dashboardY) {
+        int textY = dashboardY + 30;
+
+        for (Module module : ModuleManager.all()) {
+            // Check if mouse is hovering over the module name area
+            int textWidth = this.textRenderer.getWidth(module.getName());
+
+            if (mouseX >= dashboardX + 12 && mouseX <= dashboardX + 12 + textWidth &&
+                    mouseY >= textY + 6 && mouseY <= textY + 6 + this.textRenderer.fontHeight) {
+
+                context.drawTooltip(
+                        this.textRenderer,
+                        Text.literal(module.getDescription()),
+                        mouseX,
+                        mouseY
+                );
+                break;
+            }
+
+            textY += ROW_HEIGHT;
+        }
+    }
+
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
 
@@ -186,9 +209,11 @@ public class DashboardUI extends Screen {
                 "Settings",
                 settingsX + 12,
                 settingsY + 10,
-                0xFFAAAAAA
+                0xFFFFAA00
         );
 
         super.render(context, mouseX, mouseY, delta);
+
+        renderTooltips(context, mouseX, mouseY, dashboardX, dashboardY);
     }
 }
