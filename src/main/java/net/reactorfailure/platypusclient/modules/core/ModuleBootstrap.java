@@ -8,6 +8,7 @@ public final class ModuleBootstrap {
                 new NightVisionModule(),
                 new PersistentSneakModule(),
                 new PersistentRunModule(),
+                new PersistentHitModule(),
                 new InstantRespawnModule()
         );
     }
