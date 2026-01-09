@@ -13,18 +13,24 @@ import net.reactorfailure.platypusclient.modules.core.ModuleBootstrap;
 import net.reactorfailure.platypusclient.modules.core.ModuleManager;
 import net.reactorfailure.platypusclient.settings.core.SettingsBootstrap;
 import org.lwjgl.glfw.GLFW;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ClientSide implements ClientModInitializer {
 
+    public static final Logger LOGGER = LoggerFactory.getLogger("PlatypusClient");
     public static KeyBinding keyBinding;
 
     @Override
     public void onInitializeClient() {
+        LOGGER.info("Initializing PlatypusClient...");
 
         DashboardAlertHUD.register();
         SettingsBootstrap.init();
         ModuleBootstrap.init();
         ConfigManager.load();
+
+        LOGGER.info("Loaded {} modules", ModuleManager.all().size());
 
         // Keybinding
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -47,11 +53,14 @@ public class ClientSide implements ClientModInitializer {
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            LOGGER.info("Disconnecting, saving config...");
             ConfigManager.save();
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((h, c) -> {
             ConfigManager.save();
         });
+
+        LOGGER.info("PlatypusClient initialized successfully!");
     }
 }

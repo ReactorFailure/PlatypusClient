@@ -1,6 +1,8 @@
 package net.reactorfailure.platypusclient.modules;
 
+import net.minecraft.block.entity.VaultBlockEntity;
 import net.minecraft.client.MinecraftClient;
+import net.reactorfailure.platypusclient.ClientSide;
 import net.reactorfailure.platypusclient.modules.core.AbstractModule;
 
 public class PersistentSneakModule extends AbstractModule {
@@ -17,6 +19,8 @@ public class PersistentSneakModule extends AbstractModule {
 
     @Override
     public void onEnable() {
+        ClientSide.LOGGER.info("PersistentSneakModule enabled");
+
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) return;
 
@@ -25,6 +29,8 @@ public class PersistentSneakModule extends AbstractModule {
 
     @Override
     public void onDisable() {
+        ClientSide.LOGGER.info("PersistentSneakModule disabled");
+
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) return;
 

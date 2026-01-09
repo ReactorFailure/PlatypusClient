@@ -3,6 +3,7 @@ package net.reactorfailure.platypusclient.modules;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.reactorfailure.platypusclient.ClientSide;
 import net.reactorfailure.platypusclient.modules.core.AbstractModule;
 
 public class NightVisionModule extends AbstractModule {
@@ -19,6 +20,8 @@ public class NightVisionModule extends AbstractModule {
 
     @Override
     public void onEnable() {
+        ClientSide.LOGGER.info("Night Vision enabled");
+
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) return;
 
@@ -36,6 +39,8 @@ public class NightVisionModule extends AbstractModule {
 
     @Override
     public void onDisable() {
+        ClientSide.LOGGER.info("Night Vision disabled");
+
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) return;
 
