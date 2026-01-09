@@ -1,5 +1,5 @@
 # Platypus Client
-A terribly made, work in progress, Fabric client-side mod. 
+A terribly made, work in progress, Fabric client-side mod. Made from Fabric's mod template generator: https://fabricmc.net/develop/template/ 
 
 ## Installation
 1. Clone the project
@@ -23,6 +23,7 @@ This mod requires the [Fabric API](https://modrinth.com/mod/fabric-api#download)
 - Night vision
 - Persistent sneaking
 - Persistent run
+- Persistent hit
 - Instant respawn
 
 ## Future plans
