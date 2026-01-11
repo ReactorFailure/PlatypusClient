@@ -17,7 +17,7 @@ public class ConfigManager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final File FILE = FabricLoader.getInstance()
             .getConfigDir()
-            .resolve("platypusclient/config.json")
+            .resolve("platypusclient.json")
             .toFile();
 
     public static void saveModules(JsonObject root) {

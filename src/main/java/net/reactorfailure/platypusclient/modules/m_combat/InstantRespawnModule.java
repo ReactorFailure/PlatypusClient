@@ -1,14 +1,15 @@
-package net.reactorfailure.platypusclient.modules;
+package net.reactorfailure.platypusclient.modules.m_combat;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.DeathScreen;
 import net.reactorfailure.platypusclient.modules.core.AbstractModule;
+import net.reactorfailure.platypusclient.modules.core.ModuleCategory;
 
 public class InstantRespawnModule extends AbstractModule {
     private static InstantRespawnModule INSTANCE;
 
     public InstantRespawnModule() {
-        super("mod_ir", "Instant Respawn", "Makes you instantly respawn when you die");
+        super("mod_ir", "Instant Respawn", "Makes you instantly respawn when you die", ModuleCategory.COMBAT);
         INSTANCE = this;
     }
 
