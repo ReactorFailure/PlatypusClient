@@ -1,23 +1,21 @@
 package net.reactorfailure.platypusclient.modules.core;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ModuleManager {
-    private static final Map<Class<? extends net.reactorfailure.platypusclient.modules.core.Module>, net.reactorfailure.platypusclient.modules.core.Module> MODULES = new LinkedHashMap<>();
+    private static final Map<Class<? extends Module>, Module> MODULES = new LinkedHashMap<>();
 
-    public static <T extends net.reactorfailure.platypusclient.modules.core.Module> void register(T module) {
+    public static <T extends Module> void register(T module) {
         MODULES.put(module.getClass(), module);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends net.reactorfailure.platypusclient.modules.core.Module> T get(Class<T> clazz) {
+    public static <T extends Module> T get(Class<T> clazz) {
         return (T) MODULES.get(clazz);
     }
 
     public static boolean anyEnabled() {
-        for (net.reactorfailure.platypusclient.modules.core.Module module : MODULES.values()) {
+        for (Module module : MODULES.values()) {
             if (module.isEnabled()) {
                 return true;
             }
@@ -25,12 +23,26 @@ public class ModuleManager {
         return false;
     }
 
-    public static Collection<net.reactorfailure.platypusclient.modules.core.Module> all() {
+    public static Collection<Module> all() {
         return MODULES.values();
     }
 
+    public static Map<ModuleCategory, List<Module>> getByCategory() {
+        Map<ModuleCategory, List<Module>> categorized = new LinkedHashMap<>();
+
+        for (ModuleCategory category : ModuleCategory.values()) {
+            categorized.put(category, new ArrayList<>());
+        }
+
+        for (Module module : MODULES.values()) {
+            categorized.get(module.getCategoryName()).add(module);
+        }
+
+        return categorized;
+    }
+
     public static void tickAll() {
-        for (net.reactorfailure.platypusclient.modules.core.Module module : MODULES.values()) {
+        for (Module module : MODULES.values()) {
             if (module.isEnabled()) {
                 module.tick();
             }

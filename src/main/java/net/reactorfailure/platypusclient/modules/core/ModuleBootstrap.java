@@ -1,6 +1,11 @@
 package net.reactorfailure.platypusclient.modules.core;
 
-import net.reactorfailure.platypusclient.modules.*;
+import net.reactorfailure.platypusclient.modules.m_combat.InstantRespawnModule;
+import net.reactorfailure.platypusclient.modules.m_combat.StinkAuraModule;
+import net.reactorfailure.platypusclient.modules.m_persistent.PersistentHitModule;
+import net.reactorfailure.platypusclient.modules.m_persistent.PersistentRunModule;
+import net.reactorfailure.platypusclient.modules.m_persistent.PersistentSneakModule;
+import net.reactorfailure.platypusclient.modules.m_player.NightVisionModule;
 
 public final class ModuleBootstrap {
     public static void init() {
@@ -9,7 +14,8 @@ public final class ModuleBootstrap {
                 new PersistentSneakModule(),
                 new PersistentRunModule(),
                 new PersistentHitModule(),
-                new InstantRespawnModule()
+                new InstantRespawnModule(),
+                new StinkAuraModule()
         );
     }
 
