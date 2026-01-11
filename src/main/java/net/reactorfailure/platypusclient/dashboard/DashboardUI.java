@@ -106,7 +106,6 @@ public class DashboardUI extends Screen {
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         int dashboardX = (this.width - DASHBOARD_WIDTH) / 2;
 
-        // Check if mouse is over the dashboard panel
         if (mouseX >= dashboardX && mouseX <= dashboardX + DASHBOARD_WIDTH) {
             scrollOffset -= (int) (verticalAmount * SCROLL_SPEED);
             scrollOffset = Math.max(0, Math.min(scrollOffset, maxScroll));
@@ -116,7 +115,7 @@ public class DashboardUI extends Screen {
         return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
 
-    // Handle mouse clicks for category toggles and module buttons
+
     public boolean handleMouseClick(double mouseX, double mouseY, int button) {
         if (button == 0) { // Left click
             int dashboardX = (this.width - DASHBOARD_WIDTH) / 2;
@@ -170,17 +169,14 @@ public class DashboardUI extends Screen {
             }
         }
 
-        // Extract coords and button from the Click record and use existing logic
         double mouseX = click.x();
         double mouseY = click.y();
         int button = click.button();
 
-        // Then handle our custom dashboard clicks
         if (handleMouseClick(mouseX, mouseY, button)) {
             return true;
         }
 
-        // Fall back to super (if it does something important)
         return super.mouseClicked(click, doubleClick);
     }
 
