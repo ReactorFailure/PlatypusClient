@@ -1,10 +1,10 @@
-package net.reactorfailure.platypusclient.modules;
+package net.reactorfailure.platypusclient.modules.m_persistent;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Hand;
-import net.minecraft.util.hit.HitResult;
 import net.reactorfailure.platypusclient.ClientSide;
 import net.reactorfailure.platypusclient.modules.core.AbstractModule;
+import net.reactorfailure.platypusclient.modules.core.ModuleCategory;
 
 public class PersistentHitModule extends AbstractModule {
     private static PersistentHitModule INSTANCE;
@@ -15,7 +15,7 @@ public class PersistentHitModule extends AbstractModule {
     private int tickCounter = 0;
 
     public PersistentHitModule() {
-        super("mod_ph", "Persistent Hit", "Basically an autoclicker");
+        super("mod_ph", "Persistent Hit", "Basically an autoclicker", ModuleCategory.PERSISTENT);
         INSTANCE = this;
     }
 

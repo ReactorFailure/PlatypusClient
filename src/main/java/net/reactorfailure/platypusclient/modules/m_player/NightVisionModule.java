@@ -1,16 +1,17 @@
-package net.reactorfailure.platypusclient.modules;
+package net.reactorfailure.platypusclient.modules.m_player;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.reactorfailure.platypusclient.ClientSide;
 import net.reactorfailure.platypusclient.modules.core.AbstractModule;
+import net.reactorfailure.platypusclient.modules.core.ModuleCategory;
 
 public class NightVisionModule extends AbstractModule {
     private static NightVisionModule INSTANCE;
 
     public NightVisionModule() {
-        super("mod_nv", "Night Vision", "Makes you see in dark places");
+        super("mod_nv", "Night Vision", "Makes you see in dark places", ModuleCategory.PLAYER);
         INSTANCE = this;
     }
 

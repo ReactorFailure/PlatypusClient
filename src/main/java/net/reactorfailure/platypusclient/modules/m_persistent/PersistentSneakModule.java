@@ -1,15 +1,15 @@
-package net.reactorfailure.platypusclient.modules;
+package net.reactorfailure.platypusclient.modules.m_persistent;
 
-import net.minecraft.block.entity.VaultBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.reactorfailure.platypusclient.ClientSide;
 import net.reactorfailure.platypusclient.modules.core.AbstractModule;
+import net.reactorfailure.platypusclient.modules.core.ModuleCategory;
 
 public class PersistentSneakModule extends AbstractModule {
     private static PersistentSneakModule INSTANCE;
 
     public PersistentSneakModule() {
-        super("mod_ps", "Persistent Sneak", "Makes you sneak without pressing the shift key");
+        super("mod_ps", "Persistent Sneak", "Makes you sneak without pressing the shift key", ModuleCategory.PERSISTENT);
         INSTANCE = this;
     }
 
