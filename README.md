@@ -1,7 +1,8 @@
 # Platypus Client
-A terribly made, work in progress, Fabric client-side mod. Made from Fabric's mod template generator: https://fabricmc.net/develop/template/ 
+A terribly made, work in progress, Fabric client-side mod. Made from Fabric's mod template generator https://fabricmc.net/develop/template/.
 
 ## Installation
+Make sure you are using a jdk for Java 21
 1. Clone the project
 ```git
 git clone https://github.com/ReactorFailure/PlatypusClient.git
@@ -25,6 +26,7 @@ This mod requires the [Fabric API](https://modrinth.com/mod/fabric-api#download)
 - Persistent run
 - Persistent hit
 - Instant respawn
+- Kill aura
 
 ## Future plans
 See the repo's issue page [here](https://github.com/ReactorFailure/PlatypusClient/issues).
