@@ -9,6 +9,7 @@ import net.minecraft.client.util.InputUtil;
 import net.reactorfailure.platypusclient.config.ConfigManager;
 import net.reactorfailure.platypusclient.dashboard.DashboardAlertHUD;
 import net.reactorfailure.platypusclient.dashboard.DashboardUI;
+import net.reactorfailure.platypusclient.modules.core.Module;
 import net.reactorfailure.platypusclient.modules.core.ModuleBootstrap;
 import net.reactorfailure.platypusclient.modules.core.ModuleManager;
 import net.reactorfailure.platypusclient.settings.core.SettingsBootstrap;
@@ -25,19 +26,26 @@ public class ClientSide implements ClientModInitializer {
     public void onInitializeClient() {
         LOGGER.info("Initializing PlatypusClient...");
 
+        // Initialize custom keybind categories FIRST
+        PlatypusKeybindCategories.init();
+
         DashboardAlertHUD.register();
         SettingsBootstrap.init();
         ModuleBootstrap.init();
+
+        // Register all module keybindings
+        registerModuleKeybindings();
+
         ConfigManager.load();
 
         LOGGER.info("Loaded {} modules", ModuleManager.all().size());
 
-        // Keybinding
+        // Dashboard keybinding
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.platypusclient.open_dashboard",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_G,
-                KeyBinding.Category.MISC
+                PlatypusKeybindCategories.GENERAL
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -45,9 +53,20 @@ public class ClientSide implements ClientModInitializer {
 
             ModuleManager.tickAll();
 
+            // Check dashboard keybind
             while (keyBinding.wasPressed()) {
                 if (client.currentScreen == null) {
                     client.setScreen(new DashboardUI());
+                }
+            }
+
+            // Check module keybinds
+            for (Module module : ModuleManager.all()) {
+                while (module.getKeyBinding().wasPressed()) {
+                    module.setEnabled(!module.isEnabled());
+                    LOGGER.info("Toggled {} via keybind: {}",
+                            module.getName(),
+                            module.isEnabled() ? "ON" : "OFF");
                 }
             }
         });
@@ -57,10 +76,13 @@ public class ClientSide implements ClientModInitializer {
             ConfigManager.save();
         });
 
-        ClientPlayConnectionEvents.DISCONNECT.register((h, c) -> {
-            ConfigManager.save();
-        });
-
         LOGGER.info("PlatypusClient initialized successfully!");
+    }
+
+    private void registerModuleKeybindings() {
+        for (Module module : ModuleManager.all()) {
+            KeyBindingHelper.registerKeyBinding(module.getKeyBinding());
+            LOGGER.info("Registered keybind for module: {}", module.getName());
+        }
     }
 }

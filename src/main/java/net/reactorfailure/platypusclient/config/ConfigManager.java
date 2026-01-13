@@ -6,21 +6,103 @@ import com.google.gson.JsonObject;
 import net.fabricmc.loader.api.FabricLoader;
 import net.reactorfailure.platypusclient.modules.core.AbstractModule;
 import net.reactorfailure.platypusclient.modules.core.Module;
+import net.reactorfailure.platypusclient.modules.core.ModuleCategory;
 import net.reactorfailure.platypusclient.modules.core.ModuleManager;
 import net.reactorfailure.platypusclient.settings.core.AbstractSettings;
 import net.reactorfailure.platypusclient.settings.core.Settings;
 import net.reactorfailure.platypusclient.settings.core.SettingsManager;
 
 import java.io.*;
+import java.util.EnumMap;
+import java.util.Map;
 
 public class ConfigManager {
+
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
     private static final File FILE = FabricLoader.getInstance()
             .getConfigDir()
             .resolve("platypusclient.json")
             .toFile();
 
-    public static void saveModules(JsonObject root) {
+
+    public static void save() {
+        save(null);
+    }
+
+    public static void save(Map<ModuleCategory, Boolean> categoryStates) {
+        try {
+            JsonObject root = loadOrCreateRoot();
+
+            saveModules(root);
+            saveSettings(root);
+
+            if (categoryStates != null) {
+                saveCategoryStates(root, categoryStates);
+            }
+
+            FILE.getParentFile().mkdirs();
+            try (FileWriter writer = new FileWriter(FILE)) {
+                GSON.toJson(root, writer);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void load() {
+        if (!FILE.exists()) return;
+
+        try (FileReader reader = new FileReader(FILE)) {
+            JsonObject root = GSON.fromJson(reader, JsonObject.class);
+
+            loadModules(root);
+            loadSettings(root);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Categories
+    public static Map<ModuleCategory, Boolean> loadCategoryStates() {
+        if (!FILE.exists()) return null;
+
+        try (FileReader reader = new FileReader(FILE)) {
+            JsonObject root = GSON.fromJson(reader, JsonObject.class);
+            if (!root.has("categoryStates")) return null;
+
+            Map<ModuleCategory, Boolean> map = new EnumMap<>(ModuleCategory.class);
+            JsonObject categories = root.getAsJsonObject("categoryStates");
+
+            for (ModuleCategory category : ModuleCategory.values()) {
+                if (categories.has(category.name())) {
+                    map.put(category, categories.get(category.name()).getAsBoolean());
+                }
+            }
+
+            return map;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static void saveCategoryStates(JsonObject root, Map<ModuleCategory, Boolean> states) {
+        JsonObject categories = new JsonObject();
+
+        for (Map.Entry<ModuleCategory, Boolean> entry : states.entrySet()) {
+            categories.addProperty(entry.getKey().name(), entry.getValue());
+        }
+
+        root.add("categoryStates", categories);
+    }
+
+    //Modules
+    private static void saveModules(JsonObject root) {
         JsonObject modules = new JsonObject();
 
         for (Module module : ModuleManager.all()) {
@@ -40,7 +122,7 @@ public class ConfigManager {
         root.add("modules", modules);
     }
 
-    public static void loadModules(JsonObject root) {
+    private static void loadModules(JsonObject root) {
         if (!root.has("modules")) return;
 
         JsonObject modules = root.getAsJsonObject("modules");
@@ -55,14 +137,13 @@ public class ConfigManager {
             }
 
             if (module instanceof AbstractModule abs && obj.has("data")) {
-                abs.loadFromConfig(
-                        GSON.fromJson(obj.get("data"), Object.class)
-                );
+                abs.loadFromConfig(GSON.fromJson(obj.get("data"), Object.class));
             }
         }
     }
 
-    public static void saveSettings(JsonObject root) {
+    //Settings
+    private static void saveSettings(JsonObject root) {
         JsonObject settings = new JsonObject();
 
         for (Settings setting : SettingsManager.all()) {
@@ -77,49 +158,27 @@ public class ConfigManager {
         root.add("settings", settings);
     }
 
-    public static void loadSettings(JsonObject root) {
+    private static void loadSettings(JsonObject root) {
         if (!root.has("settings")) return;
 
         JsonObject settings = root.getAsJsonObject("settings");
 
         for (Settings setting : SettingsManager.all()) {
-            if (setting instanceof AbstractSettings abs) {
-                if (settings.has(setting.getId())) {
-                    abs.loadFromConfig(
-                            GSON.fromJson(settings.get(setting.getId()), Object.class)
-                    );
-                }
+            if (setting instanceof AbstractSettings abs && settings.has(setting.getId())) {
+                abs.loadFromConfig(GSON.fromJson(settings.get(setting.getId()), Object.class));
             }
         }
     }
 
-    public static void save() {
-        try {
-            JsonObject root = new JsonObject();
-            saveModules(root);
-            saveSettings(root);
 
-            FILE.getParentFile().mkdirs();
-            try (FileWriter writer = new FileWriter(FILE)) {
-                GSON.toJson(root, writer);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void load() {
-        if (!FILE.exists()) return;
+    private static JsonObject loadOrCreateRoot() {
+        if (!FILE.exists()) return new JsonObject();
 
         try (FileReader reader = new FileReader(FILE)) {
             JsonObject root = GSON.fromJson(reader, JsonObject.class);
-
-            loadModules(root);
-            loadSettings(root);
-
+            return root != null ? root : new JsonObject();
         } catch (Exception e) {
-            e.printStackTrace();
+            return new JsonObject();
         }
     }
 }
