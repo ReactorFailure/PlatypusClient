@@ -5,9 +5,11 @@
   "key.platypusclient.open_dashboard": "Open Dashboard",
 
   "key.platypusclient.module.mod_nv": "Toggle Night Vision",
+  "key.platypusclient.module.mod_j": "Toggle Jesus",
   "key.platypusclient.module.mod_ps": "Toggle Persistent Sneak",
   "key.platypusclient.module.mod_pr": "Toggle Persistent Run",
   "key.platypusclient.module.mod_ph": "Toggle Persistent Hit",
+  "key.platypusclient.module.mod_pp": "Toggle Persistent Place",
   "key.platypusclient.module.mod_ir": "Toggle Instant Respawn",
   "key.platypusclient.module.mod_sa": "Toggle Stink Aura"
 }
