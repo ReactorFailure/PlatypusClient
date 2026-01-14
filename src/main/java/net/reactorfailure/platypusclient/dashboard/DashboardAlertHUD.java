@@ -5,6 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
 import net.reactorfailure.platypusclient.modules.core.ModuleManager;
+import net.reactorfailure.platypusclient.settings.ToggleAlertHUDSetting;
 
 public class DashboardAlertHUD {
     public static void register() {
@@ -15,6 +16,7 @@ public class DashboardAlertHUD {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) return;
 
+        if (!ToggleAlertHUDSetting.isHudEnabled()) return;
         if (!ModuleManager.anyEnabled()) return;
 
         String text = "Platypus Client Enabled";
