@@ -23,10 +23,14 @@ public class DashboardUI extends Screen {
     private static DashboardUI INSTANCE;
 
     private final Map<Module, ButtonWidget> moduleButtons = new HashMap<>();
+    private final Map<Settings, ButtonWidget> settingButtons = new HashMap<>();
     private final Map<ModuleCategory, Boolean> categoryExpanded = new HashMap<>(ModuleCategory.class.getModifiers());
 
     private int scrollOffset = 0;
     private int maxScroll = 0;
+
+    private boolean draggingScrollbar = false;
+    private int dragOffsetY = 0;
 
     // Panel sizes
     private static final int DASHBOARD_WIDTH = 240;
@@ -80,6 +84,7 @@ public class DashboardUI extends Screen {
     protected void init() {
         this.clearChildren();
         this.moduleButtons.clear();
+        this.settingButtons.clear();
 
         int settingsCount = SettingsManager.all().size();
         int settingsHeight = settingsCount * ROW_HEIGHT + 40;
@@ -91,17 +96,18 @@ public class DashboardUI extends Screen {
         // Settings buttons
         int y = settingsY + 30;
         for (Settings setting : SettingsManager.all()) {
-            this.addDrawableChild(
-                    ButtonWidget.builder(
-                            Text.literal(setting.getName()),
-                            btn -> setting.onClick()
-                    ).dimensions(
-                            settingsX + 12,
-                            y,
-                            SETTINGS_WIDTH - 24,
-                            20
-                    ).build()
-            );
+            ButtonWidget btn = ButtonWidget.builder(
+                    Text.literal(setting.getDisplayName()),
+                    button -> setting.onClick()
+            ).dimensions(
+                    settingsX + 12,
+                    y,
+                    SETTINGS_WIDTH - 24,
+                    20
+            ).build();
+
+            this.addDrawableChild(btn);
+            this.settingButtons.put(setting, btn);
             y += ROW_HEIGHT;
         }
 
@@ -185,21 +191,87 @@ public class DashboardUI extends Screen {
 
     @Override
     public boolean mouseClicked(Click click, boolean doubleClick) {
-        for (var child : this.children()) {
-            if (child.mouseClicked(click, doubleClick)) {
-                return true;
-            }
-        }
-
         double mouseX = click.x();
         double mouseY = click.y();
         int button = click.button();
+
+        if (button == 0 && tryStartScrollbarDrag(mouseX, mouseY)) {
+            return true;
+        }
 
         if (handleMouseClick(mouseX, mouseY, button)) {
             return true;
         }
 
         return super.mouseClicked(click, doubleClick);
+    }
+
+    private boolean tryStartScrollbarDrag(double mouseX, double mouseY) {
+        if (maxScroll <= 0) return false;
+
+        int dashboardX = (this.width - DASHBOARD_WIDTH) / 2;
+        int dashboardY = 50;
+        int dashboardHeight = this.height - 100;
+
+        int scissorY = dashboardY + 30;
+        int scissorHeight = dashboardHeight - 30;
+
+        int scrollbarHeight = Math.max(
+                20,
+                scissorHeight * scissorHeight / (scissorHeight + maxScroll)
+        );
+
+        int scrollbarY = scissorY +
+                (int) ((float) scrollOffset / maxScroll * (scissorHeight - scrollbarHeight));
+
+        int scrollbarX1 = dashboardX + DASHBOARD_WIDTH - 6;
+        int scrollbarX2 = dashboardX + DASHBOARD_WIDTH - 2;
+
+        if (mouseX >= scrollbarX1 && mouseX <= scrollbarX2 &&
+                mouseY >= scrollbarY && mouseY <= scrollbarY + scrollbarHeight) {
+
+            draggingScrollbar = true;
+            dragOffsetY = (int) mouseY - scrollbarY;
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean mouseDragged(Click click, double deltaX, double deltaY) {
+        if (draggingScrollbar && maxScroll > 0) {
+            double mouseY = click.y();
+
+            int dashboardY = 50;
+            int dashboardHeight = this.height - 100;
+
+            int scissorY = dashboardY + 30;
+            int scissorHeight = dashboardHeight - 30;
+
+            int scrollbarHeight = Math.max(
+                    20,
+                    scissorHeight * scissorHeight / (scissorHeight + maxScroll)
+            );
+
+            int trackHeight = scissorHeight - scrollbarHeight;
+
+            int relativeY = (int) mouseY - scissorY - dragOffsetY;
+            relativeY = Math.max(0, Math.min(relativeY, trackHeight));
+
+            scrollOffset = (int) ((float) relativeY / trackHeight * maxScroll);
+            return true;
+        }
+
+        return super.mouseDragged(click, deltaX, deltaY);
+    }
+
+    @Override
+    public boolean mouseReleased(Click click) {
+        if (click.button() == 0) {
+            draggingScrollbar = false;
+        }
+        return super.mouseReleased(click);
     }
 
     private void playDownSound() {
@@ -215,6 +287,17 @@ public class DashboardUI extends Screen {
 
     public void refreshModuleButtons() {
         // Force re-render
+    }
+
+    public void refreshSettingButtons() {
+        // Update setting button texts and colors
+        for (Map.Entry<Settings, ButtonWidget> entry : settingButtons.entrySet()) {
+            Settings setting = entry.getKey();
+            ButtonWidget button = entry.getValue();
+
+            // Update button message with dynamic text
+            button.setMessage(Text.literal(setting.getDisplayName()));
+        }
     }
 
     @Override
@@ -411,6 +494,29 @@ public class DashboardUI extends Screen {
                 settingsY + 10,
                 0xFFAAAAAA
         );
+
+        // Render settings buttons with custom colors
+        int settingY = settingsY + 30;
+        for (Settings setting : SettingsManager.all()) {
+            ButtonWidget button = settingButtons.get(setting);
+            if (button != null) {
+                // Draw custom colored text over the button
+                String displayName = setting.getDisplayName();
+                int textWidth = this.textRenderer.getWidth(displayName);
+                int textX = settingsX + 12 + (SETTINGS_WIDTH - 24 - textWidth) / 2;
+
+
+
+                context.drawTextWithShadow(
+                        this.textRenderer,
+                        displayName,
+                        textX,
+                        settingY + 6,
+                        setting.getTextColor()
+                );
+            }
+            settingY += ROW_HEIGHT;
+        }
 
         super.render(context, mouseX, mouseY, delta);
 

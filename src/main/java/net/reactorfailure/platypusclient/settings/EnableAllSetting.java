@@ -7,7 +7,7 @@ import net.reactorfailure.platypusclient.settings.core.AbstractSettings;
 
 public class EnableAllSetting extends AbstractSettings {
     public EnableAllSetting() {
-        super("enable_all", "Enable All Modules");
+        super("setting_enableAll", "Enable All Modules");
     }
 
     @Override
