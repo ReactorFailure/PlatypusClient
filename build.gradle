@@ -31,7 +31,6 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	// Discord IPC (Fabric way)
 	modImplementation("io.github.cdagaming:DiscordIPC:0.11.1") {
 		exclude group: 'org.json', module: 'json'
 	}
@@ -45,9 +44,6 @@ processResources {
 		expand "version": inputs.properties.version
 	}
 }
-
-
-
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.release = 21
