@@ -11,5 +11,6 @@
   "key.platypusclient.module.mod_ph": "Toggle Persistent Hit",
   "key.platypusclient.module.mod_pp": "Toggle Persistent Place",
   "key.platypusclient.module.mod_ir": "Toggle Instant Respawn",
-  "key.platypusclient.module.mod_sa": "Toggle Stink Aura"
+  "key.platypusclient.module.mod_sa": "Toggle Stink Aura",
+  "key.platypusclient.module.mod_tportal": "Toggle Portal Sounds"
 }

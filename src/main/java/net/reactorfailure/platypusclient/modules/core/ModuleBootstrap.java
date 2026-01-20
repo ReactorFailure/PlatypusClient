@@ -4,6 +4,7 @@ package net.reactorfailure.platypusclient.modules.core;
 import net.reactorfailure.platypusclient.modules.m_persistent.*;
 import net.reactorfailure.platypusclient.modules.m_combat.*;
 import net.reactorfailure.platypusclient.modules.m_player.*;
+import net.reactorfailure.platypusclient.modules.misc.TogglePortalSoundsModule;
 
 public final class ModuleBootstrap {
     public static void init() {
@@ -15,7 +16,8 @@ public final class ModuleBootstrap {
                 new PersistentHitModule(),
                 new PersistentPlaceModule(),
                 new InstantRespawnModule(),
-                new StinkAuraModule()
+                new StinkAuraModule(),
+                new TogglePortalSoundsModule()
         );
     }
 
