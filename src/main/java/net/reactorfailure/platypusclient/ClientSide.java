@@ -26,19 +26,21 @@ public class ClientSide implements ClientModInitializer {
     public void onInitializeClient() {
         LOGGER.info("Initializing PlatypusClient...");
 
-        // Initialize custom keybind categories FIRST
-        PlatypusKeybindCategories.init();
+        DiscordRPCManager.get().connect();
 
+        PlatypusKeybindCategories.init();
         DashboardAlertHUD.register();
         SettingsBootstrap.init();
         ModuleBootstrap.init();
-
-        // Register all module keybindings
         registerModuleKeybindings();
 
         ConfigManager.load();
 
         LOGGER.info("Loaded {} modules", ModuleManager.all().size());
+
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            DiscordRPCManager.get().updatePresence();
+        });
 
         // Dashboard keybinding
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -49,11 +51,12 @@ public class ClientSide implements ClientModInitializer {
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            DiscordRPCManager.get().tick();
+
             if (client.player == null) return;
 
             ModuleManager.tickAll();
 
-            // Check dashboard keybind
             while (keyBinding.wasPressed()) {
                 if (client.currentScreen == null) {
                     client.setScreen(new DashboardUI());
@@ -74,9 +77,16 @@ public class ClientSide implements ClientModInitializer {
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             LOGGER.info("Disconnecting, saving config...");
             ConfigManager.save();
+
+            DiscordRPCManager.get().updatePresence();
         });
 
         LOGGER.info("PlatypusClient initialized successfully!");
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            ClientSide.LOGGER.info("JVM shutdown detected, cleaning up Discord RPC");
+            DiscordRPCManager.get().disconnect();
+        }));
     }
 
     private void registerModuleKeybindings() {
@@ -85,4 +95,5 @@ public class ClientSide implements ClientModInitializer {
             LOGGER.info("Registered keybind for module: {}", module.getName());
         }
     }
+
 }

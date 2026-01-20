@@ -75,7 +75,7 @@ public class DashboardUI extends Screen {
 
         ConfigManager.save(categoryExpanded);
         calculateMaxScroll();
-        init(); // rebuild UI
+        init();
         playDownSound();
     }
 
@@ -295,7 +295,6 @@ public class DashboardUI extends Screen {
             Settings setting = entry.getKey();
             ButtonWidget button = entry.getValue();
 
-            // Update button message with dynamic text
             button.setMessage(Text.literal(setting.getDisplayName()));
         }
     }
@@ -371,7 +370,6 @@ public class DashboardUI extends Screen {
 
             boolean expanded = categoryExpanded.getOrDefault(category, false);
 
-            // Draw category header with background
             context.fill(
                     dashboardX + 8,
                     currentY,
@@ -464,7 +462,6 @@ public class DashboardUI extends Screen {
 
         context.disableScissor();
 
-        // Draw scroll indicator if needed
         if (maxScroll > 0) {
             int scrollbarHeight = Math.max(20, scissorHeight * scissorHeight / (scissorHeight + maxScroll));
             int scrollbarY = scissorY + (int) ((float) scrollOffset / maxScroll * (scissorHeight - scrollbarHeight));
@@ -495,7 +492,6 @@ public class DashboardUI extends Screen {
                 0xFFAAAAAA
         );
 
-        // Render settings buttons with custom colors
         int settingY = settingsY + 30;
         for (Settings setting : SettingsManager.all()) {
             ButtonWidget button = settingButtons.get(setting);
