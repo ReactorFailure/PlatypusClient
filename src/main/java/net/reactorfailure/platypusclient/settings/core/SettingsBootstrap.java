@@ -6,7 +6,8 @@ public class SettingsBootstrap {
     public static void init() {
         registerSettings(
                 new EnableAllSetting(),
-                new DisableAllSetting()
+                new DisableAllSetting(),
+                new ToggleAlertHUDSetting()
         );
     }
 

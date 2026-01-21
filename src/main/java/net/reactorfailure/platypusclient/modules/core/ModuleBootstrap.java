@@ -1,21 +1,23 @@
 package net.reactorfailure.platypusclient.modules.core;
 
-import net.reactorfailure.platypusclient.modules.m_combat.InstantRespawnModule;
-import net.reactorfailure.platypusclient.modules.m_combat.StinkAuraModule;
-import net.reactorfailure.platypusclient.modules.m_persistent.PersistentHitModule;
-import net.reactorfailure.platypusclient.modules.m_persistent.PersistentRunModule;
-import net.reactorfailure.platypusclient.modules.m_persistent.PersistentSneakModule;
-import net.reactorfailure.platypusclient.modules.m_player.NightVisionModule;
+
+import net.reactorfailure.platypusclient.modules.m_persistent.*;
+import net.reactorfailure.platypusclient.modules.m_combat.*;
+import net.reactorfailure.platypusclient.modules.m_player.*;
+import net.reactorfailure.platypusclient.modules.misc.TogglePortalSoundsModule;
 
 public final class ModuleBootstrap {
     public static void init() {
         registerModules(
                 new NightVisionModule(),
+                new JesusModule(),
                 new PersistentSneakModule(),
                 new PersistentRunModule(),
                 new PersistentHitModule(),
+                new PersistentPlaceModule(),
                 new InstantRespawnModule(),
-                new StinkAuraModule()
+                new StinkAuraModule(),
+                new TogglePortalSoundsModule()
         );
     }
 

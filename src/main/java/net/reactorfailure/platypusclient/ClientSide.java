@@ -9,6 +9,7 @@ import net.minecraft.client.util.InputUtil;
 import net.reactorfailure.platypusclient.config.ConfigManager;
 import net.reactorfailure.platypusclient.dashboard.DashboardAlertHUD;
 import net.reactorfailure.platypusclient.dashboard.DashboardUI;
+import net.reactorfailure.platypusclient.modules.core.Module;
 import net.reactorfailure.platypusclient.modules.core.ModuleBootstrap;
 import net.reactorfailure.platypusclient.modules.core.ModuleManager;
 import net.reactorfailure.platypusclient.settings.core.SettingsBootstrap;
@@ -25,22 +26,33 @@ public class ClientSide implements ClientModInitializer {
     public void onInitializeClient() {
         LOGGER.info("Initializing PlatypusClient...");
 
+        DiscordRPCManager.get().connect();
+
+        PlatypusKeybindCategories.init();
         DashboardAlertHUD.register();
         SettingsBootstrap.init();
         ModuleBootstrap.init();
+        registerModuleKeybindings();
+
         ConfigManager.load();
 
         LOGGER.info("Loaded {} modules", ModuleManager.all().size());
 
-        // Keybinding
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            DiscordRPCManager.get().updatePresence();
+        });
+
+        // Dashboard keybinding
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.platypusclient.open_dashboard",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_G,
-                KeyBinding.Category.MISC
+                PlatypusKeybindCategories.GENERAL
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            DiscordRPCManager.get().tick();
+
             if (client.player == null) return;
 
             ModuleManager.tickAll();
@@ -50,17 +62,38 @@ public class ClientSide implements ClientModInitializer {
                     client.setScreen(new DashboardUI());
                 }
             }
+
+            // Check module keybinds
+            for (Module module : ModuleManager.all()) {
+                while (module.getKeyBinding().wasPressed()) {
+                    module.setEnabled(!module.isEnabled());
+                    LOGGER.info("Toggled {} via keybind: {}",
+                            module.getName(),
+                            module.isEnabled() ? "ON" : "OFF");
+                }
+            }
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             LOGGER.info("Disconnecting, saving config...");
             ConfigManager.save();
-        });
 
-        ClientPlayConnectionEvents.DISCONNECT.register((h, c) -> {
-            ConfigManager.save();
+            DiscordRPCManager.get().updatePresence();
         });
 
         LOGGER.info("PlatypusClient initialized successfully!");
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            ClientSide.LOGGER.info("JVM shutdown detected, cleaning up Discord RPC");
+            DiscordRPCManager.get().disconnect();
+        }));
     }
+
+    private void registerModuleKeybindings() {
+        for (Module module : ModuleManager.all()) {
+            KeyBindingHelper.registerKeyBinding(module.getKeyBinding());
+            LOGGER.info("Registered keybind for module: {}", module.getName());
+        }
+    }
+
 }

@@ -5,8 +5,10 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.input.KeyInput;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.reactorfailure.platypusclient.config.ConfigManager;
 import net.reactorfailure.platypusclient.modules.core.Module;
 import net.reactorfailure.platypusclient.modules.core.ModuleCategory;
 import net.reactorfailure.platypusclient.modules.core.ModuleManager;
@@ -21,10 +23,14 @@ public class DashboardUI extends Screen {
     private static DashboardUI INSTANCE;
 
     private final Map<Module, ButtonWidget> moduleButtons = new HashMap<>();
-    private final Map<ModuleCategory, Boolean> categoryExpanded = new HashMap<>();
+    private final Map<Settings, ButtonWidget> settingButtons = new HashMap<>();
+    private final Map<ModuleCategory, Boolean> categoryExpanded = new HashMap<>(ModuleCategory.class.getModifiers());
 
     private int scrollOffset = 0;
     private int maxScroll = 0;
+
+    private boolean draggingScrollbar = false;
+    private int dragOffsetY = 0;
 
     // Panel sizes
     private static final int DASHBOARD_WIDTH = 240;
@@ -38,10 +44,7 @@ public class DashboardUI extends Screen {
         super(Text.literal("PlatypusClient Dashboard"));
         INSTANCE = this;
 
-        // Initialize all categories as collapsed
-        for (ModuleCategory category : ModuleCategory.values()) {
-            categoryExpanded.put(category, false);
-        }
+        loadCategoryState();
     }
 
     public static DashboardUI getInstance() {
@@ -53,10 +56,35 @@ public class DashboardUI extends Screen {
         return false;
     }
 
+    private void loadCategoryState() {
+        Map<ModuleCategory, Boolean> saved =
+                ConfigManager.loadCategoryStates();
+
+        for (ModuleCategory category : ModuleCategory.values()) {
+            if (saved != null && saved.containsKey(category)) {
+                categoryExpanded.put(category, saved.get(category));
+            } else {
+                categoryExpanded.put(category, false); // default collapsed
+            }
+        }
+    }
+
+    private void toggleCategory(ModuleCategory category) {
+        boolean newState = !categoryExpanded.getOrDefault(category, false);
+        categoryExpanded.put(category, newState);
+
+        ConfigManager.save(categoryExpanded);
+        calculateMaxScroll();
+        init();
+        playDownSound();
+    }
+
+
     @Override
     protected void init() {
         this.clearChildren();
         this.moduleButtons.clear();
+        this.settingButtons.clear();
 
         int settingsCount = SettingsManager.all().size();
         int settingsHeight = settingsCount * ROW_HEIGHT + 40;
@@ -68,21 +96,21 @@ public class DashboardUI extends Screen {
         // Settings buttons
         int y = settingsY + 30;
         for (Settings setting : SettingsManager.all()) {
-            this.addDrawableChild(
-                    ButtonWidget.builder(
-                            Text.literal(setting.getName()),
-                            btn -> setting.onClick()
-                    ).dimensions(
-                            settingsX + 12,
-                            y,
-                            SETTINGS_WIDTH - 24,
-                            20
-                    ).build()
-            );
+            ButtonWidget btn = ButtonWidget.builder(
+                    Text.literal(setting.getDisplayName()),
+                    button -> setting.onClick()
+            ).dimensions(
+                    settingsX + 12,
+                    y,
+                    SETTINGS_WIDTH - 24,
+                    20
+            ).build();
+
+            this.addDrawableChild(btn);
+            this.settingButtons.put(setting, btn);
             y += ROW_HEIGHT;
         }
 
-        // Calculate max scroll
         calculateMaxScroll();
     }
 
@@ -106,6 +134,7 @@ public class DashboardUI extends Screen {
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         int dashboardX = (this.width - DASHBOARD_WIDTH) / 2;
 
+        // Check if mouse is over the dashboard panel
         if (mouseX >= dashboardX && mouseX <= dashboardX + DASHBOARD_WIDTH) {
             scrollOffset -= (int) (verticalAmount * SCROLL_SPEED);
             scrollOffset = Math.max(0, Math.min(scrollOffset, maxScroll));
@@ -115,9 +144,8 @@ public class DashboardUI extends Screen {
         return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
 
-
     public boolean handleMouseClick(double mouseX, double mouseY, int button) {
-        if (button == 0) { // Left click
+        if (button == 0) {
             int dashboardX = (this.width - DASHBOARD_WIDTH) / 2;
             int dashboardY = 50;
             int currentY = dashboardY + 30 - scrollOffset;
@@ -130,7 +158,8 @@ public class DashboardUI extends Screen {
                         mouseY >= currentY && mouseY <= currentY + CATEGORY_HEIGHT) {
 
                     // Toggle category
-                    categoryExpanded.put(category, !categoryExpanded.getOrDefault(category, false));
+                    toggleCategory(category);
+                    playDownSound();
                     calculateMaxScroll();
                     init(); // Rebuild UI
                     return true;
@@ -140,7 +169,6 @@ public class DashboardUI extends Screen {
 
                 if (categoryExpanded.getOrDefault(category, false)) {
                     for (Module module : categorized.get(category)) {
-                        // Check if clicked on module toggle button
                         int buttonX = dashboardX + DASHBOARD_WIDTH - 100;
                         int buttonY = currentY;
 
@@ -148,6 +176,7 @@ public class DashboardUI extends Screen {
                                 mouseY >= buttonY && mouseY <= buttonY + 20) {
 
                             module.setEnabled(!module.isEnabled());
+                            playDownSound();
                             return true;
                         }
 
@@ -162,22 +191,87 @@ public class DashboardUI extends Screen {
 
     @Override
     public boolean mouseClicked(Click click, boolean doubleClick) {
-        // Let widgets handle their clicks first (they accept Click + boolean now)
-        for (var child : this.children()) {
-            if (child.mouseClicked(click, doubleClick)) {
-                return true;
-            }
-        }
-
         double mouseX = click.x();
         double mouseY = click.y();
         int button = click.button();
+
+        if (button == 0 && tryStartScrollbarDrag(mouseX, mouseY)) {
+            return true;
+        }
 
         if (handleMouseClick(mouseX, mouseY, button)) {
             return true;
         }
 
         return super.mouseClicked(click, doubleClick);
+    }
+
+    private boolean tryStartScrollbarDrag(double mouseX, double mouseY) {
+        if (maxScroll <= 0) return false;
+
+        int dashboardX = (this.width - DASHBOARD_WIDTH) / 2;
+        int dashboardY = 50;
+        int dashboardHeight = this.height - 100;
+
+        int scissorY = dashboardY + 30;
+        int scissorHeight = dashboardHeight - 30;
+
+        int scrollbarHeight = Math.max(
+                20,
+                scissorHeight * scissorHeight / (scissorHeight + maxScroll)
+        );
+
+        int scrollbarY = scissorY +
+                (int) ((float) scrollOffset / maxScroll * (scissorHeight - scrollbarHeight));
+
+        int scrollbarX1 = dashboardX + DASHBOARD_WIDTH - 6;
+        int scrollbarX2 = dashboardX + DASHBOARD_WIDTH - 2;
+
+        if (mouseX >= scrollbarX1 && mouseX <= scrollbarX2 &&
+                mouseY >= scrollbarY && mouseY <= scrollbarY + scrollbarHeight) {
+
+            draggingScrollbar = true;
+            dragOffsetY = (int) mouseY - scrollbarY;
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean mouseDragged(Click click, double deltaX, double deltaY) {
+        if (draggingScrollbar && maxScroll > 0) {
+            double mouseY = click.y();
+
+            int dashboardY = 50;
+            int dashboardHeight = this.height - 100;
+
+            int scissorY = dashboardY + 30;
+            int scissorHeight = dashboardHeight - 30;
+
+            int scrollbarHeight = Math.max(
+                    20,
+                    scissorHeight * scissorHeight / (scissorHeight + maxScroll)
+            );
+
+            int trackHeight = scissorHeight - scrollbarHeight;
+
+            int relativeY = (int) mouseY - scissorY - dragOffsetY;
+            relativeY = Math.max(0, Math.min(relativeY, trackHeight));
+
+            scrollOffset = (int) ((float) relativeY / trackHeight * maxScroll);
+            return true;
+        }
+
+        return super.mouseDragged(click, deltaX, deltaY);
+    }
+
+    @Override
+    public boolean mouseReleased(Click click) {
+        if (click.button() == 0) {
+            draggingScrollbar = false;
+        }
+        return super.mouseReleased(click);
     }
 
     private void playDownSound() {
@@ -195,8 +289,20 @@ public class DashboardUI extends Screen {
         // Force re-render
     }
 
+    public void refreshSettingButtons() {
+        // Update setting button texts and colors
+        for (Map.Entry<Settings, ButtonWidget> entry : settingButtons.entrySet()) {
+            Settings setting = entry.getKey();
+            ButtonWidget button = entry.getValue();
+
+            button.setMessage(Text.literal(setting.getDisplayName()));
+        }
+    }
+
     @Override
     public void close() {
+        ConfigManager.save(categoryExpanded);
+
         super.close();
         INSTANCE = null;
     }
@@ -264,23 +370,40 @@ public class DashboardUI extends Screen {
 
             boolean expanded = categoryExpanded.getOrDefault(category, false);
 
-            // Draw category header with background
             context.fill(
                     dashboardX + 8,
                     currentY,
                     dashboardX + DASHBOARD_WIDTH - 8,
                     currentY + CATEGORY_HEIGHT,
-                    0xFF2A2A2A  // Dark gray background for all categories
+                    0xFF2A2A2A
             );
 
-            // Draw expand/collapse arrow
+
             String arrow = expanded ? "▼" : "▶";
+            int enabledCount = getEnabledCount(modules);
+
+            String baseText = arrow + " " + category.getCategoryName() + " ";
             context.drawTextWithShadow(
                     this.textRenderer,
-                    arrow + " " + category.getCategoryName() + " (" + modules.size() + ")",
+                    baseText,
                     dashboardX + 16,
                     currentY + 7,
                     0xFFFFFFFF
+            );
+
+            String countText = "(" + enabledCount + ")";
+            int baseWidth = this.textRenderer.getWidth(baseText);
+
+            int countColor = enabledCount > 0
+                    ? 0xff55ff55   // green
+                    : 0xFFFFFFFF;  // default white
+
+            context.drawTextWithShadow(
+                    this.textRenderer,
+                    countText,
+                    dashboardX + 16 + baseWidth,
+                    currentY + 7,
+                    countColor
             );
 
             currentY += CATEGORY_HEIGHT;
@@ -288,10 +411,20 @@ public class DashboardUI extends Screen {
             // Draw modules if expanded
             if (expanded) {
                 for (Module module : modules) {
-                    // Module name
+                    // Module name with keybind
+                    MutableText displayText = Text.literal(module.getName());
+
+                    String keybindText = getKeybindText(module);
+                    if (!keybindText.isEmpty()) {
+                        displayText.append(
+                                Text.literal(" (" + keybindText + ")")
+                                        .formatted(Formatting.GOLD)
+                        );
+                    }
+
                     context.drawTextWithShadow(
                             this.textRenderer,
-                            module.getName(),
+                            displayText,
                             dashboardX + 20,
                             currentY + 5,
                             0xFFCCCCCC
@@ -329,7 +462,6 @@ public class DashboardUI extends Screen {
 
         context.disableScissor();
 
-        // Draw scroll indicator if needed
         if (maxScroll > 0) {
             int scrollbarHeight = Math.max(20, scissorHeight * scissorHeight / (scissorHeight + maxScroll));
             int scrollbarY = scissorY + (int) ((float) scrollOffset / maxScroll * (scissorHeight - scrollbarHeight));
@@ -357,8 +489,30 @@ public class DashboardUI extends Screen {
                 "Settings",
                 settingsX + 12,
                 settingsY + 10,
-                0xFFFFAA00
+                0xFFAAAAAA
         );
+
+        int settingY = settingsY + 30;
+        for (Settings setting : SettingsManager.all()) {
+            ButtonWidget button = settingButtons.get(setting);
+            if (button != null) {
+                // Draw custom colored text over the button
+                String displayName = setting.getDisplayName();
+                int textWidth = this.textRenderer.getWidth(displayName);
+                int textX = settingsX + 12 + (SETTINGS_WIDTH - 24 - textWidth) / 2;
+
+
+
+                context.drawTextWithShadow(
+                        this.textRenderer,
+                        displayName,
+                        textX,
+                        settingY + 6,
+                        setting.getTextColor()
+                );
+            }
+            settingY += ROW_HEIGHT;
+        }
 
         super.render(context, mouseX, mouseY, delta);
 
@@ -375,7 +529,13 @@ public class DashboardUI extends Screen {
 
             if (categoryExpanded.getOrDefault(category, false)) {
                 for (Module module : categorized.get(category)) {
-                    int textWidth = this.textRenderer.getWidth(module.getName());
+                    // Calculate full display name with keybind
+                    String displayName = module.getName();
+                    String keybindText = getKeybindText(module);
+                    if (!keybindText.isEmpty()) {
+                        displayName += " (" + keybindText + ")";
+                    }
+                    int textWidth = this.textRenderer.getWidth(displayName);
 
                     if (mouseX >= dashboardX + 20 && mouseX <= dashboardX + 20 + textWidth &&
                             mouseY >= currentY + 5 && mouseY <= currentY + 5 + this.textRenderer.fontHeight) {
@@ -393,5 +553,23 @@ public class DashboardUI extends Screen {
                 }
             }
         }
+    }
+
+    private int getEnabledCount(List<Module> modules) {
+        int count = 0;
+        for (Module module : modules) {
+            if (module.isEnabled()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private String getKeybindText(Module module) {
+        net.minecraft.client.option.KeyBinding keybinding = module.getKeyBinding();
+        if (keybinding.isUnbound()) {
+            return "";
+        }
+        return keybinding.getBoundKeyLocalizedText().getString();
     }
 }
