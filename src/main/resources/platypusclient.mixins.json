@@ -4,6 +4,9 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "ExampleMixin",
+    "FreeCamMixin",
+    "FreeCamPlayerMixin",
+    "FreeCamSpectatorMixin",
     "NoPortalSoundMixin"
   ],
   "injectors": {
@@ -11,5 +14,9 @@
   },
   "overwrites": {
     "requireAnnotations": true
-	}
+  },
+  "client": [
+    "TitleScreenMixin",
+    "MultiplayerScreenMixin"
+  ]
 }

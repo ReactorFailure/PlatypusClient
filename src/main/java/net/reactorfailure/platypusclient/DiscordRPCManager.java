@@ -129,6 +129,7 @@ public class DiscordRPCManager {
         RichPresence.Builder builder = new RichPresence.Builder()
                 .setActivityType(ActivityType.Playing)
                 .setStartTimestamp(startTime)
+                .setSmallImage("Logo")
                 .setStatusDisplayType(StatusDisplayType.Name);
 
         if (mc == null || mc.world == null) {

@@ -13,28 +13,33 @@ git clone https://github.com/ReactorFailure/PlatypusClient.git
 ```
 ./gradlew build
 ```
-## Versions
+
+## Installation
+Go to the repo's [releases page](https://github.com/ReactorFailure/PlatypusClient/releases) and make sure to download the jar file for the **right Minecraft version**
+
+## Supported Minecraft Versions
 - 1.21.11
 
 ## Dependencies
-This mod requires the [Fabric API](https://modrinth.com/mod/fabric-api#download).
+> [!TIP]
+> Use [Prism Launcher](https://prismlauncher.org/) to easily download mods
+
+| Mod                                               | Required? | Notes                                                                                                                                                                                                  |
+|---------------------------------------------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Fabric API](https://modrinth.com/mod/fabric-api) | ✅         | -                                                                                                                                                                                                      |
+| [ModMenu](https://modrinth.com/mod/modmenu)       | ❌         | Not required but recommended if you want the mod to be translated. You will also need to download the [Text Placeholder API](https://modrinth.com/mod/placeholder-api) as it is a dependy for ModMenu. |
 
 ## Usage
 > [!NOTE]
 > Keybinds can be changed in Minecraft's settings
 
-- Press `G` to open the mod's dashboard
+- Press `G` to open/close the mod's dashboard
 
 ## Features
-- Night vision
-- Persistent sneaking
-- Persistent run
-- Persistent hit
-- Persistent place
-- Instant respawn
-- Kill aura
+- Discord rich presence
+- Cheat modules
+- Other QOL changes maybe
 
-and more...
 
 ## Future plans
 See the repo's issue page [here](https://github.com/ReactorFailure/PlatypusClient/issues).

@@ -32,6 +32,8 @@ public class DashboardUI extends Screen {
     private boolean draggingScrollbar = false;
     private int dragOffsetY = 0;
 
+    private final Screen parentScreen;
+
     // Panel sizes
     private static final int DASHBOARD_WIDTH = 240;
     private static final int SETTINGS_WIDTH = 122;
@@ -40,8 +42,14 @@ public class DashboardUI extends Screen {
     private static final int PANEL_GAP = 6;
     private static final int SCROLL_SPEED = 20;
 
+
     public DashboardUI() {
+        this(null); // Called from in-game (G key)
+    }
+
+    public DashboardUI(Screen parentScreen) {
         super(Text.literal("PlatypusClient Dashboard"));
+        this.parentScreen = parentScreen;
         INSTANCE = this;
 
         loadCategoryState();
@@ -111,8 +119,40 @@ public class DashboardUI extends Screen {
             y += ROW_HEIGHT;
         }
 
+
+        if (parentScreen != null) {
+            int buttonSize = 20;
+            int padding = 4;
+
+            this.addDrawableChild(new DashboardButtonWidget(
+                    this.width - buttonSize - padding,
+                    padding,
+                    buttonSize,
+                    buttonSize,
+                    button -> this.close() // Close to return to parent screen
+            ));
+        }
+
+        int dashboardY = 50;
+        int dashboardHeight = this.height - 100;
+        int doneButtonWidth = 200;
+        int doneButtonHeight = 20;
+        int doneButtonX = dashboardX + (DASHBOARD_WIDTH - doneButtonWidth) / 2;
+        int doneButtonY = dashboardY + dashboardHeight + 10; // 10px below dashboard
+
+        this.addDrawableChild(ButtonWidget.builder(
+                Text.literal("Done"),
+                button -> this.close()
+        ).dimensions(
+                doneButtonX,
+                doneButtonY,
+                doneButtonWidth,
+                doneButtonHeight
+        ).build());
+
         calculateMaxScroll();
     }
+
 
     private void calculateMaxScroll() {
         int totalHeight = 0;
@@ -191,6 +231,10 @@ public class DashboardUI extends Screen {
 
     @Override
     public boolean mouseClicked(Click click, boolean doubleClick) {
+        if (super.mouseClicked(click, doubleClick)) {
+            return true;
+        }
+
         double mouseX = click.x();
         double mouseY = click.y();
         int button = click.button();
@@ -199,11 +243,7 @@ public class DashboardUI extends Screen {
             return true;
         }
 
-        if (handleMouseClick(mouseX, mouseY, button)) {
-            return true;
-        }
-
-        return super.mouseClicked(click, doubleClick);
+        return handleMouseClick(mouseX, mouseY, button);
     }
 
     private boolean tryStartScrollbarDrag(double mouseX, double mouseY) {
@@ -303,7 +343,10 @@ public class DashboardUI extends Screen {
     public void close() {
         ConfigManager.save(categoryExpanded);
 
-        super.close();
+        if (this.client != null) {
+            this.client.setScreen(parentScreen);
+        }
+
         INSTANCE = null;
     }
 

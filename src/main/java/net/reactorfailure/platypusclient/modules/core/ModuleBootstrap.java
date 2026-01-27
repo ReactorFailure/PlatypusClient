@@ -4,6 +4,7 @@ package net.reactorfailure.platypusclient.modules.core;
 import net.reactorfailure.platypusclient.modules.m_persistent.*;
 import net.reactorfailure.platypusclient.modules.m_combat.*;
 import net.reactorfailure.platypusclient.modules.m_player.*;
+import net.reactorfailure.platypusclient.modules.misc.FreeCamModule;
 import net.reactorfailure.platypusclient.modules.misc.TogglePortalSoundsModule;
 
 public final class ModuleBootstrap {
@@ -15,9 +16,11 @@ public final class ModuleBootstrap {
                 new PersistentRunModule(),
                 new PersistentHitModule(),
                 new PersistentPlaceModule(),
+                new AutoEquipTotemModule(),
                 new InstantRespawnModule(),
                 new StinkAuraModule(),
-                new TogglePortalSoundsModule()
+                new TogglePortalSoundsModule(),
+                new FreeCamModule()
         );
     }
 
