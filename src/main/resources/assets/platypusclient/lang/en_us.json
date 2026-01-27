@@ -1,16 +1,18 @@
 {
-  "key.category.platypusclient.general": "PlatypusClient: General",
-  "key.category.platypusclient.modules": "PlatypusClient: Modules",
+  "key.category.platypusclient.general.modmenu": "PlatypusClient: General",
+  "key.category.platypusclient.modules.modmenu": "PlatypusClient: Modules",
 
-  "key.platypusclient.open_dashboard": "Open Dashboard",
+  "key.platypusclient.open_dashboard.modmenu": "Open Dashboard",
 
-  "key.platypusclient.module.mod_nv": "Toggle Night Vision",
-  "key.platypusclient.module.mod_j": "Toggle Jesus",
-  "key.platypusclient.module.mod_ps": "Toggle Persistent Sneak",
-  "key.platypusclient.module.mod_pr": "Toggle Persistent Run",
-  "key.platypusclient.module.mod_ph": "Toggle Persistent Hit",
-  "key.platypusclient.module.mod_pp": "Toggle Persistent Place",
-  "key.platypusclient.module.mod_ir": "Toggle Instant Respawn",
-  "key.platypusclient.module.mod_sa": "Toggle Stink Aura",
-  "key.platypusclient.module.mod_tportal": "Toggle Portal Sounds"
+  "key.platypusclient.module.mod_nv.modmenu": "Toggle Night Vision",
+  "key.platypusclient.module.mod_j.modmenu": "Toggle Jesus",
+  "key.platypusclient.module.mod_ps.modmenu": "Toggle Persistent Sneak",
+  "key.platypusclient.module.mod_pr.modmenu": "Toggle Persistent Run",
+  "key.platypusclient.module.mod_ph.modmenu": "Toggle Persistent Hit",
+  "key.platypusclient.module.mod_pp.modmenu": "Toggle Persistent Place",
+  "key.platypusclient.module.mod.mod_autoTot.modmenu": "Toggle Auto Equip Totem",
+  "key.platypusclient.module.mod_ir.modmenu": "Toggle Instant Respawn",
+  "key.platypusclient.module.mod_sa.modmenu": "Toggle Stink Aura",
+  "key.platypusclient.module.mod_tportal.modmenu": "Toggle Portal Sounds",
+  "key.platypusclient.module.mod_fc.modmenu": "Toggle Free Cam"
 }
