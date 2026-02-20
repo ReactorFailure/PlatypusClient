@@ -1,7 +1,7 @@
 package net.reactorfailure.platypusclient.mixin;
 
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.reactorfailure.platypusclient.modules.misc.FreeCamModule;
+import net.reactorfailure.platypusclient.modules.m_misc.FreeCamModule;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
