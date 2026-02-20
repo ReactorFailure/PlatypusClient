@@ -35,10 +35,10 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation("io.github.cdagaming:DiscordIPC:0.11.2") {
+	modImplementation("io.github.cdagaming:DiscordIPC:0.11.3") {
 		exclude group: 'org.json', module: 'json'
 	}
-	include("io.github.cdagaming:DiscordIPC:0.11.2")
+	include("io.github.cdagaming:DiscordIPC:0.11.3")
 
 	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
