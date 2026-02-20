@@ -15,7 +15,7 @@ public class PersistentHitModule extends AbstractModule {
     private int tickCounter = 0;
 
     public PersistentHitModule() {
-        super("mod_ph", "Persistent Hit", "Basically an autoclicker", ModuleCategory.PERSISTENT);
+        super("mod_persistHit", "Persistent Hit", "Basically an autoclicker", ModuleCategory.PERSISTENT);
         INSTANCE = this;
     }
 

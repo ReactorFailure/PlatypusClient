@@ -11,7 +11,7 @@ public class NightVisionModule extends AbstractModule {
     private static NightVisionModule INSTANCE;
 
     public NightVisionModule() {
-        super("mod_nv", "Night Vision", "Makes you see in dark places", ModuleCategory.PLAYER);
+        super("mod_nightVision", "Night Vision", "Makes you see in dark places", ModuleCategory.PLAYER);
         INSTANCE = this;
     }
 

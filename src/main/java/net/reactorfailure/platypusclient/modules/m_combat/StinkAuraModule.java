@@ -16,7 +16,7 @@ public class StinkAuraModule extends AbstractModule {
     private static StinkAuraModule INSTANCE;
 
     public StinkAuraModule() {
-        super("mod_sa", "Stink Aura", "Makes a force field around you", ModuleCategory.COMBAT);
+        super("mod_stinkAura", "Stink Aura", "Makes a force field around you", ModuleCategory.COMBAT);
         INSTANCE = this;
     }
 
