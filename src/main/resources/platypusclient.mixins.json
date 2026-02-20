@@ -7,7 +7,12 @@
     "FreeCamMixin",
     "FreeCamPlayerMixin",
     "FreeCamSpectatorMixin",
-    "NoPortalSoundMixin"
+    "NoPortalSoundMixin",
+    "ItemStackMixin",
+    "TooltipComponentMixin",
+    "TooltipTextWrapMixin",
+    "MouseScrollMixin",
+    "HandledScreenTooltipMixin"
   ],
   "injectors": {
     "defaultRequire": 1

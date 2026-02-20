@@ -129,7 +129,6 @@ public class DiscordRPCManager {
         RichPresence.Builder builder = new RichPresence.Builder()
                 .setActivityType(ActivityType.Playing)
                 .setStartTimestamp(startTime)
-                .setSmallImage("Logo")
                 .setStatusDisplayType(StatusDisplayType.Name);
 
         if (mc == null || mc.world == null) {
@@ -150,12 +149,13 @@ public class DiscordRPCManager {
                     .setState(getDimensionName(mc));
         }
 
-        builder.setLargeImage(getBigImageKey(newState, mc));
+        builder.setLargeImage(getBigImageKey(newState, mc))
+                .setSmallImage("pee"); //TODO change this when you get a proper logo for the mod
 
         if (force || newState != lastState) {
             lastState = newState;
             client.sendRichPresence(builder.build());
-            ClientSide.LOGGER.info("RPC updated at {}", newState);
+//            ClientSide.LOGGER.info("RPC updated → {}", newState);
         }
     }
 

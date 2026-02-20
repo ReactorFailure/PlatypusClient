@@ -1,4 +1,4 @@
-package net.reactorfailure.platypusclient.modules.misc;
+package net.reactorfailure.platypusclient.modules.m_misc;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.Vec3d;
@@ -21,7 +21,7 @@ public class FreeCamModule extends AbstractModule {
     private float originalPitch;
 
     public FreeCamModule() {
-        super("mod_fc", "FreeCam", "Spectator-like camera mode", ModuleCategory.MISC);
+        super("mod_freeCam", "FreeCam", "Spectator-like camera mode", ModuleCategory.MISC);
         INSTANCE = this;
     }
 

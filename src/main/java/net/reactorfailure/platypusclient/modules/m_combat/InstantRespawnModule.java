@@ -9,7 +9,7 @@ public class InstantRespawnModule extends AbstractModule {
     private static InstantRespawnModule INSTANCE;
 
     public InstantRespawnModule() {
-        super("mod_ir", "Instant Respawn", "Makes you instantly respawn when you die", ModuleCategory.COMBAT);
+        super("mod_instRespawn", "Instant Respawn", "Makes you instantly respawn when you die", ModuleCategory.COMBAT);
         INSTANCE = this;
     }
 

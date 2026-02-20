@@ -17,7 +17,7 @@ public class PersistentPlaceModule extends AbstractModule {
     private int tickCounter = 0;
 
     public PersistentPlaceModule() {
-        super("mod_pp", "Persistent Place", "Automatically places blocks continuously", ModuleCategory.PERSISTENT);
+        super("mod_persistPlace", "Persistent Place", "Automatically places blocks continuously", ModuleCategory.PERSISTENT);
         INSTANCE = this;
     }
 

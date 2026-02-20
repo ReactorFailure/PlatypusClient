@@ -4,7 +4,7 @@ A terribly made, work in progress, Fabric client-side mod. Made from Fabric's mo
 <br>
 This is purely made for fun. There are much better, open source cheat clients such as [Wurst Client](https://github.com/Wurst-Imperium/Wurst7) and [Meteor Client](https://github.com/MeteorDevelopment/meteor-client)
 ## Build
-Make sure you are using a jdk for Java 21
+Make sure you are using a JDK for Java 21 (I used Adoptium Temurin)
 1. Clone the project
 ```git
 git clone https://github.com/ReactorFailure/PlatypusClient.git
@@ -13,6 +13,7 @@ git clone https://github.com/ReactorFailure/PlatypusClient.git
 ```
 ./gradlew build
 ```
+Once the build is successful, the jar will be located in `build > libs`
 
 ## Installation
 Go to the repo's [releases page](https://github.com/ReactorFailure/PlatypusClient/releases) and make sure to download the jar file for the **right Minecraft version**
@@ -24,10 +25,10 @@ Go to the repo's [releases page](https://github.com/ReactorFailure/PlatypusClien
 > [!TIP]
 > Use [Prism Launcher](https://prismlauncher.org/) to easily download mods
 
-| Mod                                               | Required? | Notes                                                                                                                                                                                                  |
-|---------------------------------------------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [Fabric API](https://modrinth.com/mod/fabric-api) | ✅         | -                                                                                                                                                                                                      |
-| [ModMenu](https://modrinth.com/mod/modmenu)       | ❌         | Not required but recommended if you want the mod to be translated. You will also need to download the [Text Placeholder API](https://modrinth.com/mod/placeholder-api) as it is a dependy for ModMenu. |
+| Mod                                               | Required? | Notes                                                                                                                                                                                                                             |
+|---------------------------------------------------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Fabric API](https://modrinth.com/mod/fabric-api) | ✅         | -                                                                                                                                                                                                                                 |
+| [ModMenu](https://modrinth.com/mod/modmenu)       | ❌         | **Not required bur recomended** if you want to access the mod's settings in the mod menu . You will also need to download the [Text Placeholder API](https://modrinth.com/mod/placeholder-api) as it is a dependency for ModMenu. |
 
 ## Usage
 > [!NOTE]

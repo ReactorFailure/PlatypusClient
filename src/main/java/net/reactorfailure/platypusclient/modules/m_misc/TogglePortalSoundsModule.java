@@ -1,4 +1,4 @@
-package net.reactorfailure.platypusclient.modules.misc;
+package net.reactorfailure.platypusclient.modules.m_misc;
 
 import net.reactorfailure.platypusclient.ClientSide;
 import net.reactorfailure.platypusclient.modules.core.AbstractModule;
@@ -8,7 +8,7 @@ public class TogglePortalSoundsModule extends AbstractModule {
     private static TogglePortalSoundsModule INSTANCE;
 
     public TogglePortalSoundsModule() {
-        super("mod_tportal", "No Portal Sound", "Disables annoying portal ambient sounds", ModuleCategory.MISC);
+        super("mod_togPortalSound", "No Portal Sound", "Disables annoying portal ambient sounds", ModuleCategory.MISC);
         INSTANCE = this;
     }
 

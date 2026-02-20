@@ -9,7 +9,7 @@ public class PersistentSneakModule extends AbstractModule {
     private static PersistentSneakModule INSTANCE;
 
     public PersistentSneakModule() {
-        super("mod_ps", "Persistent Sneak", "Makes you sneak without pressing the shift key", ModuleCategory.PERSISTENT);
+        super("mod_persistSneak", "Persistent Sneak", "Makes you sneak without pressing the shift key", ModuleCategory.PERSISTENT);
         INSTANCE = this;
     }
 

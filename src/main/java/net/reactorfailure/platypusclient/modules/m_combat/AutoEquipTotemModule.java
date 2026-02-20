@@ -23,7 +23,7 @@ public class AutoEquipTotemModule extends AbstractModule {
     private boolean totemEquipped = false;
 
     public AutoEquipTotemModule() {
-        super("mod_autoTot", "Auto Equip Totem", "Automatically equips a totem to your off-hand when low health", ModuleCategory.COMBAT);
+        super("mod_autoTotem", "Auto Equip Totem", "Automatically equips a totem to your off-hand when low health", ModuleCategory.COMBAT);
         INSTANCE = this;
     }
 

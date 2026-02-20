@@ -12,6 +12,7 @@ import net.reactorfailure.platypusclient.dashboard.DashboardUI;
 import net.reactorfailure.platypusclient.modules.core.Module;
 import net.reactorfailure.platypusclient.modules.core.ModuleBootstrap;
 import net.reactorfailure.platypusclient.modules.core.ModuleManager;
+import net.reactorfailure.platypusclient.qol.TooltipScroll.TooltipScrollHandler;
 import net.reactorfailure.platypusclient.settings.core.SettingsBootstrap;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
@@ -33,6 +34,9 @@ public class ClientSide implements ClientModInitializer {
         SettingsBootstrap.init();
         ModuleBootstrap.init();
         registerModuleKeybindings();
+
+
+        TooltipScrollHandler.register();
 
         ConfigManager.load();
 

@@ -9,7 +9,7 @@ public class PersistentRunModule extends AbstractModule {
     private static PersistentRunModule INSTANCE;
 
     public PersistentRunModule() {
-        super("mod_pr", "Persistent Run", "Makes you run without pressing the ctrl key", ModuleCategory.PERSISTENT);
+        super("mod_persistRun", "Persistent Run", "Makes you run without pressing the ctrl key", ModuleCategory.PERSISTENT);
         INSTANCE = this;
     }
 

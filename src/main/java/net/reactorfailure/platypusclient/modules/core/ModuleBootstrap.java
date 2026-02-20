@@ -4,8 +4,7 @@ package net.reactorfailure.platypusclient.modules.core;
 import net.reactorfailure.platypusclient.modules.m_persistent.*;
 import net.reactorfailure.platypusclient.modules.m_combat.*;
 import net.reactorfailure.platypusclient.modules.m_player.*;
-import net.reactorfailure.platypusclient.modules.misc.FreeCamModule;
-import net.reactorfailure.platypusclient.modules.misc.TogglePortalSoundsModule;
+import net.reactorfailure.platypusclient.modules.m_misc.*;
 
 public final class ModuleBootstrap {
     public static void init() {

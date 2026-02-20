@@ -12,7 +12,7 @@ public class JesusModule extends AbstractModule {
     private static JesusModule INSTANCE;
 
     public JesusModule() {
-        super("mod_j", "Become Jesus", "Walk on water", ModuleCategory.PLAYER);
+        super("mod_jesus", "Become Jesus", "Walk on water", ModuleCategory.PLAYER);
         INSTANCE = this;
     }
 

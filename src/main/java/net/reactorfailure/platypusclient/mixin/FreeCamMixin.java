@@ -2,7 +2,7 @@ package net.reactorfailure.platypusclient.mixin;
 
 import net.minecraft.client.render.Camera;
 import net.minecraft.util.math.Vec3d;
-import net.reactorfailure.platypusclient.modules.misc.FreeCamModule;
+import net.reactorfailure.platypusclient.modules.m_misc.FreeCamModule;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
