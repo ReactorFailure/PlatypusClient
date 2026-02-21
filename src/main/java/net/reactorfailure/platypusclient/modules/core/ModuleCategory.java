@@ -3,7 +3,7 @@ package net.reactorfailure.platypusclient.modules.core;
 public enum ModuleCategory {
     PLAYER("Player"),
     PERSISTENT("Persistent"),
-    HIGHLIGHT("Highlight"),
+//    HIGHLIGHT("Highlight"),
     COMBAT("Combat"),
     MISC("Misc");
 
