@@ -544,8 +544,6 @@ public class DashboardUI extends Screen {
                 int textWidth = this.textRenderer.getWidth(displayName);
                 int textX = settingsX + 12 + (SETTINGS_WIDTH - 24 - textWidth) / 2;
 
-
-
                 context.drawTextWithShadow(
                         this.textRenderer,
                         displayName,
@@ -583,12 +581,7 @@ public class DashboardUI extends Screen {
                     if (mouseX >= dashboardX + 20 && mouseX <= dashboardX + 20 + textWidth &&
                             mouseY >= currentY + 5 && mouseY <= currentY + 5 + this.textRenderer.fontHeight) {
 
-                        context.drawTooltip(
-                                this.textRenderer,
-                                Text.literal(module.getDescription()),
-                                mouseX,
-                                mouseY
-                        );
+                        drawBorderedTooltip(context, module.getDescription(), mouseX, mouseY);
                         return;
                     }
 
@@ -596,6 +589,46 @@ public class DashboardUI extends Screen {
                 }
             }
         }
+    }
+
+    private void drawBorderedTooltip(DrawContext context, String description, int mouseX, int mouseY) {
+        if (description == null || description.isEmpty()) return;
+
+        int padding = 4;
+        int textWidth  = this.textRenderer.getWidth(description);
+        int textHeight = this.textRenderer.fontHeight;
+
+        int tooltipW = textWidth  + padding * 2;
+        int tooltipH = textHeight + padding * 2;
+
+        int tooltipX = mouseX + 10; //Right of cursor
+        int tooltipY = mouseY + 6; //Down from cursor
+
+        if (tooltipX + tooltipW > this.width)  tooltipX = mouseX - tooltipW - 4;
+        if (tooltipY < 0)                       tooltipY = 0;
+        if (tooltipY + tooltipH > this.height)  tooltipY = this.height - tooltipH;
+
+        int borderColor = 0xFF00FFFF; // Cyan
+
+        int x1 = tooltipX;
+        int y1 = tooltipY;
+        int x2 = tooltipX + tooltipW;
+        int y2 = tooltipY + tooltipH;
+
+        context.fill(x1, y1, x2, y2, 0xF0101010);
+
+        context.fill(x1,     y1,     x2,     y1 + 1, borderColor); // top
+        context.fill(x1,     y2 - 1, x2,     y2,     borderColor); // bottom
+        context.fill(x1,     y1,     x1 + 1, y2,     borderColor); // left
+        context.fill(x2 - 1, y1,     x2,     y2,     borderColor); // right
+
+        context.drawTextWithShadow(
+                this.textRenderer,
+                description,
+                x1 + padding,
+                y1 + padding,
+                0xFFFFFFFF
+        );
     }
 
     private int getEnabledCount(List<Module> modules) {

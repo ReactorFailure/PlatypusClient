@@ -28,7 +28,7 @@ Go to the repo's [releases page](https://github.com/ReactorFailure/PlatypusClien
 | Mod                                               | Required? | Notes                                                                                                                                                                                                                             |
 |---------------------------------------------------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [Fabric API](https://modrinth.com/mod/fabric-api) | ✅         | -                                                                                                                                                                                                                                 |
-| [ModMenu](https://modrinth.com/mod/modmenu)       | ❌         | **Not required bur recomended** if you want to access the mod's settings in the mod menu . You will also need to download the [Text Placeholder API](https://modrinth.com/mod/placeholder-api) as it is a dependency for ModMenu. |
+| [ModMenu](https://modrinth.com/mod/modmenu)       | ❌         | **Not required but recomended** if you want to access the mod's settings in the mod menu . You will also need to download the [Text Placeholder API](https://modrinth.com/mod/placeholder-api) as it is a dependency for ModMenu. |
 
 ## Usage
 > [!NOTE]

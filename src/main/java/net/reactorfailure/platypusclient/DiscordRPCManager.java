@@ -150,7 +150,7 @@ public class DiscordRPCManager {
         }
 
         builder.setLargeImage(getBigImageKey(newState, mc))
-                .setSmallImage("pee"); //TODO change this when you get a proper logo for the mod
+                .setSmallImage("logo");
 
         if (force || newState != lastState) {
             lastState = newState;
