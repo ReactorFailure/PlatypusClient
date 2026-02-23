@@ -8,8 +8,8 @@ import net.minecraft.item.Items;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
 import net.reactorfailure.platypusclient.ClientSide;
-import net.reactorfailure.platypusclient.modules.core.AbstractModule;
-import net.reactorfailure.platypusclient.modules.core.ModuleCategory;
+import net.reactorfailure.platypusclient.modules.L_core.AbstractModule;
+import net.reactorfailure.platypusclient.modules.L_core.ModuleCategory;
 
 import java.util.List;
 

@@ -4,8 +4,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.reactorfailure.platypusclient.ClientSide;
-import net.reactorfailure.platypusclient.modules.core.AbstractModule;
-import net.reactorfailure.platypusclient.modules.core.ModuleCategory;
+import net.reactorfailure.platypusclient.modules.L_core.AbstractModule;
+import net.reactorfailure.platypusclient.modules.L_core.ModuleCategory;
 
 public class NightVisionModule extends AbstractModule {
     private static NightVisionModule INSTANCE;

@@ -1,4 +1,4 @@
-package net.reactorfailure.platypusclient.modules.core;
+package net.reactorfailure.platypusclient.modules.L_core;
 
 import java.util.*;
 
