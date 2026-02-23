@@ -2,8 +2,8 @@ package net.reactorfailure.platypusclient.modules.m_combat;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.DeathScreen;
-import net.reactorfailure.platypusclient.modules.core.AbstractModule;
-import net.reactorfailure.platypusclient.modules.core.ModuleCategory;
+import net.reactorfailure.platypusclient.modules.L_core.AbstractModule;
+import net.reactorfailure.platypusclient.modules.L_core.ModuleCategory;
 
 public class InstantRespawnModule extends AbstractModule {
     private static InstantRespawnModule INSTANCE;

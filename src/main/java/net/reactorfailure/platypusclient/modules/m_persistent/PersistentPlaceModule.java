@@ -5,8 +5,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.reactorfailure.platypusclient.ClientSide;
-import net.reactorfailure.platypusclient.modules.core.AbstractModule;
-import net.reactorfailure.platypusclient.modules.core.ModuleCategory;
+import net.reactorfailure.platypusclient.modules.L_core.AbstractModule;
+import net.reactorfailure.platypusclient.modules.L_core.ModuleCategory;
 
 public class PersistentPlaceModule extends AbstractModule {
     private static PersistentPlaceModule INSTANCE;

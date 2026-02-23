@@ -5,8 +5,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.reactorfailure.platypusclient.ClientSide;
-import net.reactorfailure.platypusclient.modules.core.AbstractModule;
-import net.reactorfailure.platypusclient.modules.core.ModuleCategory;
+import net.reactorfailure.platypusclient.modules.L_core.AbstractModule;
+import net.reactorfailure.platypusclient.modules.L_core.ModuleCategory;
 
 public class JesusModule extends AbstractModule {
     private static JesusModule INSTANCE;

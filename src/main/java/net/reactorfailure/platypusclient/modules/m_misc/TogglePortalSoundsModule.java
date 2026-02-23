@@ -1,8 +1,8 @@
 package net.reactorfailure.platypusclient.modules.m_misc;
 
 import net.reactorfailure.platypusclient.ClientSide;
-import net.reactorfailure.platypusclient.modules.core.AbstractModule;
-import net.reactorfailure.platypusclient.modules.core.ModuleCategory;
+import net.reactorfailure.platypusclient.modules.L_core.AbstractModule;
+import net.reactorfailure.platypusclient.modules.L_core.ModuleCategory;
 
 public class TogglePortalSoundsModule extends AbstractModule {
     private static TogglePortalSoundsModule INSTANCE;

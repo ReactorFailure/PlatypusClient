@@ -2,8 +2,8 @@ package net.reactorfailure.platypusclient.modules.m_persistent;
 
 import net.minecraft.client.MinecraftClient;
 import net.reactorfailure.platypusclient.ClientSide;
-import net.reactorfailure.platypusclient.modules.core.AbstractModule;
-import net.reactorfailure.platypusclient.modules.core.ModuleCategory;
+import net.reactorfailure.platypusclient.modules.L_core.AbstractModule;
+import net.reactorfailure.platypusclient.modules.L_core.ModuleCategory;
 
 public class PersistentRunModule extends AbstractModule {
     private static PersistentRunModule INSTANCE;
