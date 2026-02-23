@@ -8,6 +8,7 @@ import net.reactorfailure.platypusclient.modules.L_core.AbstractModule;
 import net.reactorfailure.platypusclient.modules.L_core.Module;
 import net.reactorfailure.platypusclient.modules.L_core.ModuleCategory;
 import net.reactorfailure.platypusclient.modules.L_core.ModuleManager;
+import net.reactorfailure.platypusclient.modules.L_utils.options.ModuleOptions;
 import net.reactorfailure.platypusclient.settings.core.AbstractSettings;
 import net.reactorfailure.platypusclient.settings.core.Settings;
 import net.reactorfailure.platypusclient.settings.core.SettingsManager;
@@ -24,7 +25,6 @@ public class ConfigManager {
             .getConfigDir()
             .resolve("platypusclient.json")
             .toFile();
-
 
     public static void save() {
         save(null);
@@ -51,12 +51,12 @@ public class ConfigManager {
         }
     }
 
-
     public static void load() {
         if (!FILE.exists()) return;
 
         try (FileReader reader = new FileReader(FILE)) {
             JsonObject root = GSON.fromJson(reader, JsonObject.class);
+            if (root == null) return;
 
             loadModules(root);
             loadSettings(root);
@@ -66,13 +66,13 @@ public class ConfigManager {
         }
     }
 
-    //Categories
+    //Category dropdown states
     public static Map<ModuleCategory, Boolean> loadCategoryStates() {
         if (!FILE.exists()) return null;
 
         try (FileReader reader = new FileReader(FILE)) {
             JsonObject root = GSON.fromJson(reader, JsonObject.class);
-            if (!root.has("categoryStates")) return null;
+            if (root == null || !root.has("categoryStates")) return null;
 
             Map<ModuleCategory, Boolean> map = new EnumMap<>(ModuleCategory.class);
             JsonObject categories = root.getAsJsonObject("categoryStates");
@@ -93,11 +93,9 @@ public class ConfigManager {
 
     private static void saveCategoryStates(JsonObject root, Map<ModuleCategory, Boolean> states) {
         JsonObject categories = new JsonObject();
-
         for (Map.Entry<ModuleCategory, Boolean> entry : states.entrySet()) {
             categories.addProperty(entry.getKey().name(), entry.getValue());
         }
-
         root.add("categoryStates", categories);
     }
 
@@ -106,17 +104,26 @@ public class ConfigManager {
         JsonObject modules = new JsonObject();
 
         for (Module module : ModuleManager.all()) {
-            if (module instanceof AbstractModule abs) {
-                JsonObject obj = new JsonObject();
-                obj.addProperty("enabled", module.isEnabled());
+            if (!(module instanceof AbstractModule abs)) continue;
 
-                Object data = abs.saveToConfig();
-                if (data != null) {
-                    obj.add("data", GSON.toJsonTree(data));
-                }
+            JsonObject obj = new JsonObject();
+            obj.addProperty("enabled", module.isEnabled());
 
-                modules.add(module.getId(), obj);
+            Object data = abs.saveToConfig();
+            if (data != null) {
+                obj.add("data", GSON.toJsonTree(data));
             }
+
+            // Save all registered options
+            if (!abs.getOptions().isEmpty()) {
+                JsonObject optionsJson = new JsonObject();
+                for (ModuleOptions<?> option : abs.getOptions()) {
+                    optionsJson.add(option.getId(), GSON.toJsonTree(option.saveToConfig()));
+                }
+                obj.add("options", optionsJson);
+            }
+
+            modules.add(module.getId(), obj);
         }
 
         root.add("modules", modules);
@@ -136,8 +143,22 @@ public class ConfigManager {
                 module.setEnabled(obj.get("enabled").getAsBoolean());
             }
 
-            if (module instanceof AbstractModule abs && obj.has("data")) {
-                abs.loadFromConfig(GSON.fromJson(obj.get("data"), Object.class));
+            if (module instanceof AbstractModule abs) {
+                if (obj.has("data")) {
+                    abs.loadFromConfig(GSON.fromJson(obj.get("data"), Object.class));
+                }
+
+                // Load registered options
+                if (obj.has("options")) {
+                    JsonObject optionsJson = obj.getAsJsonObject("options");
+                    for (ModuleOptions<?> option : abs.getOptions()) {
+                        if (optionsJson.has(option.getId())) {
+                            option.loadFromConfig(
+                                    GSON.fromJson(optionsJson.get(option.getId()), Object.class)
+                            );
+                        }
+                    }
+                }
             }
         }
     }
@@ -169,7 +190,6 @@ public class ConfigManager {
             }
         }
     }
-
 
     private static JsonObject loadOrCreateRoot() {
         if (!FILE.exists()) return new JsonObject();
