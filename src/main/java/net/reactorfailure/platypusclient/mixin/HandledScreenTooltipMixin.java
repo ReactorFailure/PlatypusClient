@@ -3,7 +3,6 @@ package net.reactorfailure.platypusclient.mixin;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.screen.slot.Slot;
-import net.reactorfailure.platypusclient.ClientSide;
 import net.reactorfailure.platypusclient.qol.TooltipScroll.TooltipScroll;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,9 +28,8 @@ public abstract class HandledScreenTooltipMixin {
     )
     private int modifyTooltipY(int y) {
         int offset = TooltipScroll.getInstance().getYOffset();
-        int newY = y + offset;
-        ClientSide.LOGGER.info("Modifying tooltip Y: {} -> {} (offset: {})", y, newY, offset);
-        return newY;
+
+        return y + offset;
     }
 
     @Inject(method = "render", at = @At("HEAD"))
