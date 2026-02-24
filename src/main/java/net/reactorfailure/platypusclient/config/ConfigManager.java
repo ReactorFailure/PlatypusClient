@@ -8,7 +8,7 @@ import net.reactorfailure.platypusclient.modules.L_core.AbstractModule;
 import net.reactorfailure.platypusclient.modules.L_core.Module;
 import net.reactorfailure.platypusclient.modules.L_core.ModuleCategory;
 import net.reactorfailure.platypusclient.modules.L_core.ModuleManager;
-import net.reactorfailure.platypusclient.modules.L_utils.options.ModuleOptions;
+import net.reactorfailure.platypusclient.modules.L_utils.ModuleOptions;
 import net.reactorfailure.platypusclient.settings.core.AbstractSettings;
 import net.reactorfailure.platypusclient.settings.core.Settings;
 import net.reactorfailure.platypusclient.settings.core.SettingsManager;

@@ -1,4 +1,4 @@
-package net.reactorfailure.platypusclient.modules.L_utils.options;
+package net.reactorfailure.platypusclient.modules.L_utils;
 
 import java.util.function.Consumer;
 
@@ -9,9 +9,9 @@ public class BooleanOption implements ModuleOptions<Boolean> {
     private final Consumer<Boolean> onChange;
 
     public BooleanOption(String id, String label, boolean initial, Consumer<Boolean> onChange) {
-        this.id       = id;
-        this.label    = label;
-        this.value    = initial;
+        this.id = id;
+        this.label = label;
+        this.value = initial;
         this.onChange = onChange;
     }
 
@@ -19,7 +19,7 @@ public class BooleanOption implements ModuleOptions<Boolean> {
         this(id, label, initial, null);
     }
 
-    @Override public String getId()    { return id; }
+    @Override public String getId() { return id; }
     @Override public String getLabel() { return label; }
     @Override public Boolean getValue() { return value; }
 

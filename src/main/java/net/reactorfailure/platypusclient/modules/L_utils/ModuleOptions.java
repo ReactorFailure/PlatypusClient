@@ -1,4 +1,4 @@
-package net.reactorfailure.platypusclient.modules.L_utils.options;
+package net.reactorfailure.platypusclient.modules.L_utils;
 
 public interface ModuleOptions <T>{
     String getId();
