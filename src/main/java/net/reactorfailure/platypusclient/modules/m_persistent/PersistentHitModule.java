@@ -5,27 +5,34 @@ import net.minecraft.util.Hand;
 import net.reactorfailure.platypusclient.ClientSide;
 import net.reactorfailure.platypusclient.modules.L_core.AbstractModule;
 import net.reactorfailure.platypusclient.modules.L_core.ModuleCategory;
+import net.reactorfailure.platypusclient.modules.L_utils.SliderOption;
 
 public class PersistentHitModule extends AbstractModule {
     private static PersistentHitModule INSTANCE;
 
-    // Click delay in ticks (20 ticks = 1 second)
-    // Default: 4 ticks = 5 clicks per second (CPS)
-    private int clickDelay = 4;
+
+    private int clickDelay  = 4;
     private int tickCounter = 0;
+
+    private final SliderOption optSpeed = new SliderOption(
+            "clickDelay", "Click Speed",
+            1, 10, 4,
+            1,
+            "Very Fast", "Normal",
+            v -> this.clickDelay = v.intValue()
+    );
 
     public PersistentHitModule() {
         super("mod_persistHit", "Persistent Hit", "Basically an autoclicker", ModuleCategory.PERSISTENT);
         INSTANCE = this;
+        addOption(optSpeed);
     }
 
-    public static PersistentHitModule get() {
-        return INSTANCE;
-    }
+    public static PersistentHitModule get() { return INSTANCE; }
 
     @Override
     public void onEnable() {
-        ClientSide.LOGGER.info("Persistent Hit enabled with {} CPS", getCPS());
+        ClientSide.LOGGER.info("Persistent Hit enabled – {} CPS", getCPS());
     }
 
     @Override
@@ -41,42 +48,31 @@ public class PersistentHitModule extends AbstractModule {
             if (!isEnabled() || client.player == null) return;
 
             tickCounter++;
-
-            // Only click when delay has passed
             if (tickCounter >= clickDelay) {
                 tickCounter = 0;
                 performClick(client);
             }
         } catch (Exception e) {
             ClientSide.LOGGER.error("Error in Persistent Hit tick: ", e);
-            setEnabled(false); // Disable module on error to prevent crash loop
+            setEnabled(false);
         }
     }
 
     private void performClick(MinecraftClient client) {
         try {
-            if (client.player != null && client.interactionManager != null) {
+            if (client.player == null || client.interactionManager == null) return;
 
-                client.player.swingHand(Hand.MAIN_HAND);
+            client.player.swingHand(Hand.MAIN_HAND);
 
-                if (client.targetedEntity != null) {
-                    client.interactionManager.attackEntity(client.player, client.targetedEntity);
-                    ClientSide.LOGGER.debug("Attacked entity: {}", client.targetedEntity.getName().getString());
-                }
-                else if (client.crosshairTarget != null) {
-                    switch (client.crosshairTarget.getType()) {
-                        case BLOCK:
-
-                            client.interactionManager.attackBlock(
-                                    ((net.minecraft.util.hit.BlockHitResult) client.crosshairTarget).getBlockPos(),
-                                    ((net.minecraft.util.hit.BlockHitResult) client.crosshairTarget).getSide()
-                            );
-                            ClientSide.LOGGER.debug("Attacking block");
-                            break;
-                        default:
-                            ClientSide.LOGGER.debug("Swinging in air");
-                            break;
-                    }
+            if (client.targetedEntity != null) {
+                client.interactionManager.attackEntity(client.player, client.targetedEntity);
+                ClientSide.LOGGER.debug("Attacked entity: {}", client.targetedEntity.getName().getString());
+            } else if (client.crosshairTarget != null) {
+                if (client.crosshairTarget.getType() == net.minecraft.util.hit.HitResult.Type.BLOCK) {
+                    client.interactionManager.attackBlock(
+                            ((net.minecraft.util.hit.BlockHitResult) client.crosshairTarget).getBlockPos(),
+                            ((net.minecraft.util.hit.BlockHitResult) client.crosshairTarget).getSide()
+                    );
                 }
             }
         } catch (Exception e) {
@@ -84,27 +80,7 @@ public class PersistentHitModule extends AbstractModule {
         }
     }
 
-    public int getClickDelay() {
-        return clickDelay;
-    }
-
-    public void setClickDelay(int delay) {
-        this.clickDelay = Math.max(1, Math.min(20, delay));
-    }
-
-    public int getCPS() {
-        return 20 / clickDelay;
-    }
-
-    @Override
-    public Object saveToConfig() {
-        return clickDelay;
-    }
-
-    @Override
-    public void loadFromConfig(Object data) {
-        if (data instanceof Number) {
-            setClickDelay(((Number) data).intValue());
-        }
-    }
+    public int  getClickDelay() { return clickDelay; }
+    public void setClickDelay(int d) { optSpeed.setValue((double) Math.max(1, Math.min(10, d))); }
+    public int  getCPS() { return Math.max(1, 20 / clickDelay); }
 }

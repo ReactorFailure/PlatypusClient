@@ -7,27 +7,33 @@ import net.minecraft.util.hit.HitResult;
 import net.reactorfailure.platypusclient.ClientSide;
 import net.reactorfailure.platypusclient.modules.L_core.AbstractModule;
 import net.reactorfailure.platypusclient.modules.L_core.ModuleCategory;
+import net.reactorfailure.platypusclient.modules.L_utils.SliderOption;
 
 public class PersistentPlaceModule extends AbstractModule {
     private static PersistentPlaceModule INSTANCE;
 
-    // Place delay in ticks (20 ticks = 1 second)
-    // Default: 4 ticks = 5 placements per second
-    private int placeDelay = 4;
+    private int placeDelay  = 4;
     private int tickCounter = 0;
+
+    private final SliderOption optSpeed = new SliderOption(
+            "placeDelay", "Place Speed",
+            1, 10, 4,
+            1,
+            "Very Fast", "Normal",
+            v -> this.placeDelay = v.intValue()
+    );
 
     public PersistentPlaceModule() {
         super("mod_persistPlace", "Persistent Place", "Automatically places blocks continuously", ModuleCategory.PERSISTENT);
         INSTANCE = this;
+        addOption(optSpeed);
     }
 
-    public static PersistentPlaceModule get() {
-        return INSTANCE;
-    }
+    public static PersistentPlaceModule get() { return INSTANCE; }
 
     @Override
     public void onEnable() {
-        ClientSide.LOGGER.info("Persistent Place enabled with {} placements per second", getPlacementsPerSecond());
+        ClientSide.LOGGER.info("Persistent Place enabled – {} placements/s", getPlacementsPerSecond());
     }
 
     @Override
@@ -40,12 +46,9 @@ public class PersistentPlaceModule extends AbstractModule {
     public void tick() {
         try {
             MinecraftClient client = MinecraftClient.getInstance();
-            if (!isEnabled() || client.player == null) return;
-            if (client.interactionManager == null) return;
+            if (!isEnabled() || client.player == null || client.interactionManager == null) return;
 
             tickCounter++;
-
-            // Only place when delay has passed
             if (tickCounter >= placeDelay) {
                 tickCounter = 0;
                 performPlace(client);
@@ -60,51 +63,17 @@ public class PersistentPlaceModule extends AbstractModule {
         try {
             if (client.crosshairTarget == null) return;
             if (client.crosshairTarget.getType() != HitResult.Type.BLOCK) return;
+            if (client.player.getMainHandStack().isEmpty()) return;
 
             BlockHitResult blockHit = (BlockHitResult) client.crosshairTarget;
-
-            // Check if player is holding something placeable
-            if (client.player.getMainHandStack().isEmpty()) {
-                ClientSide.LOGGER.debug("No item in hand to place");
-                return;
-            }
-
-            client.interactionManager.interactBlock(
-                    client.player,
-                    Hand.MAIN_HAND,
-                    blockHit
-            );
-
+            client.interactionManager.interactBlock(client.player, Hand.MAIN_HAND, blockHit);
             client.player.swingHand(Hand.MAIN_HAND);
-
-            ClientSide.LOGGER.debug("Placed block at {}", blockHit.getBlockPos());
-
         } catch (Exception e) {
             ClientSide.LOGGER.error("Error performing place: ", e);
         }
     }
 
-    public int getPlaceDelay() {
-        return placeDelay;
-    }
-
-    public void setPlaceDelay(int delay) {
-        this.placeDelay = Math.max(1, Math.min(20, delay));
-    }
-
-    public int getPlacementsPerSecond() {
-        return 20 / placeDelay;
-    }
-
-    @Override
-    public Object saveToConfig() {
-        return placeDelay;
-    }
-
-    @Override
-    public void loadFromConfig(Object data) {
-        if (data instanceof Number) {
-            setPlaceDelay(((Number) data).intValue());
-        }
-    }
+    public int  getPlaceDelay() { return placeDelay; }
+    public void setPlaceDelay(int d) { optSpeed.setValue((double) Math.max(1, Math.min(10, d))); }
+    public int getPlacementsPerSecond() { return Math.max(1, 20 / placeDelay); }
 }
