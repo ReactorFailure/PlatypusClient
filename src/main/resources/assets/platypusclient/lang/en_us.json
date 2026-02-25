@@ -6,6 +6,10 @@
 
   "key.platypusclient.module.mod_nightVision": "Toggle Night Vision",
   "key.platypusclient.module.mod_jesus": "Toggle Jesus",
+  "key.platypusclient.module.mod_fly":  "Toggle Fly",
+  "key.platypusclient.module.mod_spider":  "Toggle Spider",
+  "key.platypusclient.module.mod_noSlow":  "Toggle No Slow",
+  "key.platypusclient.module.mod_speedBoost": "Toggle Speed Boost",
   "key.platypusclient.module.mod_persistSneak": "Toggle Persistent Sneak",
   "key.platypusclient.module.mod_persistRun": "Toggle Persistent Run",
   "key.platypusclient.module.mod_persistHit": "Toggle Persistent Hit",

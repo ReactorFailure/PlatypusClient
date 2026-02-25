@@ -11,6 +11,10 @@ public final class ModuleBootstrap {
         registerModules(
                 new NightVisionModule(),
                 new JesusModule(),
+                new FlyModule(),
+                new SpiderModule(),
+                new NoSlowModule(),
+                new SpeedBoostModule(),
                 new PersistentSneakModule(),
                 new PersistentRunModule(),
                 new PersistentHitModule(),
