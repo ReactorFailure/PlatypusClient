@@ -23,6 +23,10 @@
   },
   "client": [
     "TitleScreenMixin",
-    "MultiplayerScreenMixin"
+    "MultiplayerScreenMixin",
+    "SpiderClientMixin",
+    "NoSlowMixin$EntityMixin",
+    "NoSlowMixin$LivingEntityMixin",
+    "FlyClientMixin"
   ]
 }
