@@ -12,8 +12,8 @@
     "TooltipComponentMixin",
     "TooltipTextWrapMixin",
     "MouseScrollMixin",
-    "HandledScreenTooltipMixin",
-    "WindowIconMixin"
+    "HandledScreenTooltipMixin"
+
   ],
   "injectors": {
     "defaultRequire": 1
