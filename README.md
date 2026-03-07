@@ -1,3 +1,6 @@
+![Platypus Client Banner](src/main/resources/assets/platypusclient/textures/gui/title/banner.png)
+<hr>
+
 # Platypus Client
 A terribly made, work in progress, Fabric client-side mod. Made from Fabric's mod template generator https://fabricmc.net/develop/template/.
 <br>
@@ -16,7 +19,7 @@ git clone https://github.com/ReactorFailure/PlatypusClient.git
 Once the build is successful, the jar will be located in `build > libs`
 
 ## Installation
-Go to the repo's [releases page](https://github.com/ReactorFailure/PlatypusClient/releases) and make sure to download the jar file for the **right Minecraft version**
+Go to the repo's [releases page](https://github.com/ReactorFailure/PlatypusClient/releases) and make sure to download the jar file for the **right Minecraft version**. Once the mod finished downloading, drag and drop the jar to the mod folder.
 
 ## Supported Minecraft Versions
 - 1.21.11
@@ -25,10 +28,10 @@ Go to the repo's [releases page](https://github.com/ReactorFailure/PlatypusClien
 > [!TIP]
 > Use [Prism Launcher](https://prismlauncher.org/) to easily download mods
 
-| Mod                                               | Required? | Notes                                                                                                                                                                                                                             |
-|---------------------------------------------------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [Fabric API](https://modrinth.com/mod/fabric-api) | ✅         | -                                                                                                                                                                                                                                 |
-| [ModMenu](https://modrinth.com/mod/modmenu)       | ❌         | **Not required but recomended** if you want to access the mod's settings in the mod menu . You will also need to download the [Text Placeholder API](https://modrinth.com/mod/placeholder-api) as it is a dependency for ModMenu. |
+| Mod                                               | Required? | Notes                                                                                                                                                                                                                            |
+|---------------------------------------------------|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Fabric API](https://modrinth.com/mod/fabric-api) | ✅         | -                                                                                                                                                                                                                                |
+| [ModMenu](https://modrinth.com/mod/modmenu)       | ❌         | **Not required but nice to have** if you want to access the mod's settings in a mod menu. You will also need to download the [Text Placeholder API](https://modrinth.com/mod/placeholder-api) as it is a dependency for ModMenu. |
 
 ## Usage
 > [!NOTE]
@@ -39,7 +42,7 @@ Go to the repo's [releases page](https://github.com/ReactorFailure/PlatypusClien
 ## Features
 - Discord rich presence
 - Cheat modules
-- Other QOL changes maybe
+- QOL changes (Text wrapping tooltip, scrollable tooltip, and shulker tooltip)
 
 
 ## Future plans
