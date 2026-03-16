@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(TooltipComponent.class)
-public interface TooltipComponentMixin {
+public interface I_TooltipComponentMixin {
     @Inject(method = "of(Lnet/minecraft/item/tooltip/TooltipData;)Lnet/minecraft/client/gui/tooltip/TooltipComponent;", at = @At("HEAD"), cancellable = true)
     private static void onOf(TooltipData data, CallbackInfoReturnable<TooltipComponent> cir) {
         if (data instanceof ShulkerBoxData shulkerData) {

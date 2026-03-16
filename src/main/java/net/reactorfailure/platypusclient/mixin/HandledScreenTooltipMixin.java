@@ -28,16 +28,16 @@ public abstract class HandledScreenTooltipMixin {
     )
     private int modifyTooltipY(int y) {
         int offset = TooltipScroll.getInstance().getYOffset();
-
         return y + offset;
     }
 
     @Inject(method = "render", at = @At("HEAD"))
     private void onRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        // Check which slot we're hovering
         Slot currentSlot = this.getSlotAt(mouseX, mouseY);
-
-        if (currentSlot != lastHoveredSlot) {
+        if (currentSlot == null) {
+            TooltipScroll.getInstance().reset();
+            lastHoveredSlot = null;
+        } else if (currentSlot != lastHoveredSlot) {
             TooltipScroll.getInstance().reset();
             lastHoveredSlot = currentSlot;
         }
