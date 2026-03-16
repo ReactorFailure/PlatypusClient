@@ -14,7 +14,6 @@ public final class ModuleBootstrap {
                 new FlyModule(),
                 new SpiderModule(),
                 new NoSlowModule(),
-                new SpeedBoostModule(),
                 new PersistentSneakModule(),
                 new PersistentRunModule(),
                 new PersistentHitModule(),

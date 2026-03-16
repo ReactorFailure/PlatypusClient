@@ -9,7 +9,7 @@
     "FreeCamSpectatorMixin",
     "NoPortalSoundMixin",
     "ItemStackMixin",
-    "TooltipComponentMixin",
+    "I_TooltipComponentMixin",
     "TooltipTextWrapMixin",
     "MouseScrollMixin",
     "HandledScreenTooltipMixin"
