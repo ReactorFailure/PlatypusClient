@@ -12,8 +12,8 @@
     "I_TooltipComponentMixin",
     "TooltipTextWrapMixin",
     "MouseScrollMixin",
-    "HandledScreenTooltipMixin"
-
+    "HandledScreenTooltipMixin",
+    "JesusClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1

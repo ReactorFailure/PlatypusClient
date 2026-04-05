@@ -674,7 +674,11 @@ public class DashboardUI extends Screen {
 
         int tooltipX = mouseX + 10;
         int tooltipY = mouseY + 6;
-        if (tooltipX + tooltipW > this.width) tooltipX = mouseX - tooltipW - 4;
+
+        if (tooltipX + tooltipW > this.width - 4) {
+            tooltipX = this.width - 4 - tooltipW;
+        }
+        if (tooltipX < 4) tooltipX = 4;
         if (tooltipY < 0) tooltipY = 0;
         if (tooltipY + tooltipH > this.height) tooltipY = this.height - tooltipH;
 
