@@ -2,6 +2,7 @@ package net.reactorfailure.platypusclient.modules.m_player;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.util.math.Vec3d;
 import net.reactorfailure.platypusclient.ClientSide;
 import net.reactorfailure.platypusclient.modules.L_core.AbstractModule;
 import net.reactorfailure.platypusclient.modules.L_core.ModuleCategory;
@@ -87,7 +88,11 @@ public class FlyModule extends AbstractModule {
             if (justReleased) spaceReleasedAfterT1 = true;
 
             if (justPressed && spaceReleasedAfterT1) {
-                setEnabled(false);
+                Vec3d vel = mc.player.getVelocity();
+                mc.player.setVelocity(vel.x, 0.0, vel.z);
+                mc.player.getAbilities().flying = false;
+                waitingForSecondTap = false;
+                spaceReleasedAfterT1 = false;
                 wasSpacePressed = spaceNow;
                 return;
             }
