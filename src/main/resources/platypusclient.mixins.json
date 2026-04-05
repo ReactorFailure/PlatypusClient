@@ -13,7 +13,8 @@
     "TooltipTextWrapMixin",
     "MouseScrollMixin",
     "HandledScreenTooltipMixin",
-    "JesusClientMixin"
+    "JesusClientMixin",
+    "NoWeaponCooldownMixin"
   ],
   "injectors": {
     "defaultRequire": 1

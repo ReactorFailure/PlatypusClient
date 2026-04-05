@@ -21,6 +21,7 @@ public final class ModuleBootstrap {
                 new AutoEquipTotemModule(),
                 new InstantRespawnModule(),
                 new StinkAuraModule(),
+                new NoWeaponCooldownModule(),
                 new TogglePortalSoundsModule(),
                 new FreeCamModule()
         );
