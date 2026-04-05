@@ -5,11 +5,11 @@ import net.minecraft.util.Hand;
 import net.reactorfailure.platypusclient.ClientSide;
 import net.reactorfailure.platypusclient.modules.L_core.AbstractModule;
 import net.reactorfailure.platypusclient.modules.L_core.ModuleCategory;
+import net.reactorfailure.platypusclient.modules.L_utils.BooleanOption;
 import net.reactorfailure.platypusclient.modules.L_utils.SliderOption;
 
 public class PersistentHitModule extends AbstractModule {
     private static PersistentHitModule INSTANCE;
-
 
     private int clickDelay  = 4;
     private int tickCounter = 0;
@@ -47,6 +47,11 @@ public class PersistentHitModule extends AbstractModule {
             MinecraftClient client = MinecraftClient.getInstance();
             if (!isEnabled() || client.player == null) return;
 
+            if (client.player.getAttackCooldownProgress(0f) < 1.0f) {
+                tickCounter = 0;
+                return;
+            }
+
             tickCounter++;
             if (tickCounter >= clickDelay) {
                 tickCounter = 0;
@@ -81,6 +86,6 @@ public class PersistentHitModule extends AbstractModule {
     }
 
     public int  getClickDelay() { return clickDelay; }
-    public void setClickDelay(int d) { optSpeed.setValue((double) Math.max(1, Math.min(10, d))); }
+    public void setClickDelay(int d) { optSpeed.setValue((double) Math.clamp(d, 1, 10)); }
     public int  getCPS() { return Math.max(1, 20 / clickDelay); }
 }

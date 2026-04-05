@@ -17,6 +17,7 @@
   "key.platypusclient.module.mod_autoTotem": "Toggle Auto Equip Totem",
   "key.platypusclient.module.mod_instRespawn": "Toggle Instant Respawn",
   "key.platypusclient.module.mod_stinkAura": "Toggle Stink Aura",
+  "key.platypusclient.module.mod_noWeaponCooldown": "Toggle No Weapon Cooldown",
   "key.platypusclient.module.mod_togPortalSound": "Toggle Portal Sounds",
   "key.platypusclient.module.mod_freeCam": "Toggle Free Cam"
 }
